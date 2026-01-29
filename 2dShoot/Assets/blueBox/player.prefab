@@ -200,7 +200,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::playerShoot
   bulletPrefab: {fileID: 3915872339184485368, guid: db7b35076b81a49489391d8d3dc4e42d, type: 3}
   firePoint: {fileID: 5523444447253544984}
-  bulletSpeed: 15
+  bulletSpeed: 20
   magazineSize: 15
   bulletsInMagazine: 15
   reloadTime: 1.5
