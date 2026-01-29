@@ -80,6 +80,7 @@ public class GuaiiKaoJin : MonoBehaviour
         {
             float t = prepareTimer / prepareTime;
             movementEnabled = false;
+            // 限制移动
             // 颜色渐变
             material.color = Color.Lerp(startColor, warningColor, t);
 
