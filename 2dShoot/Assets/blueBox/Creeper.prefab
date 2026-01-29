@@ -264,10 +264,11 @@ MonoBehaviour:
   moveSpeed: 3
   stopDistance: 2
   targetTag: Player
-  explosionRadius: 3.5
-  playerPushForce: 15
+  movementEnabled: 1
+  explosionRadius: 2
+  playerPushForce: 25
   pushDuration: 0.3
-  prepareTime: 1.5
+  prepareTime: 1
   colorChangeObject: {fileID: 5078398038271134819}
   startColor: {r: 1, g: 1, b: 1, a: 1}
   warningColor: {r: 1, g: 0, b: 0, a: 1}

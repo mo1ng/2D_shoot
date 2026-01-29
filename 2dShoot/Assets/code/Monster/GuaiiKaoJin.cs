@@ -8,6 +8,7 @@ public class GuaiiKaoJin : MonoBehaviour
     public float moveSpeed = 5f;
     public float stopDistance = 2f;
     public string targetTag = "Player";
+    public bool movementEnabled = true;
 
     [Header("爆炸设置")]
     public float explosionRadius = 5f;
@@ -55,7 +56,7 @@ public class GuaiiKaoJin : MonoBehaviour
 
         float distance = Vector3.Distance(transform.position, target.position);
 
-        if (distance > stopDistance)
+        if (distance > stopDistance&& movementEnabled==true)
         {
             // 靠近玩家
             transform.position += (target.position - transform.position).normalized * moveSpeed * Time.deltaTime;
@@ -78,7 +79,7 @@ public class GuaiiKaoJin : MonoBehaviour
         if (material != null && colorChangeObject != null)
         {
             float t = prepareTimer / prepareTime;
-
+            movementEnabled = false;
             // 颜色渐变
             material.color = Color.Lerp(startColor, warningColor, t);
 
@@ -91,6 +92,7 @@ public class GuaiiKaoJin : MonoBehaviour
     void Explode()
     {
         hasExploded = true;
+        
 
         // 最终变成红色
         if (material != null)
