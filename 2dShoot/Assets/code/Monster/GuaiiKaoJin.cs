@@ -1,42 +1,35 @@
 ﻿using UnityEngine;
 using System.Collections;
+
 public class GuaiiKaoJin : MonoBehaviour
-
-
 {
-    [Header("基础设置")]
     public float moveSpeed = 5f;
     public float stopDistance = 2f;
     public string targetTag = "Player";
-    public bool movementEnabled = true;
-
-    [Header("爆炸设置")]
     public float explosionRadius = 5f;
     public float playerPushForce = 15f;
     public float pushDuration = 0.3f;
     public float prepareTime = 1.5f;
-
-    [Header("颜色渐变效果")]
-    public GameObject colorChangeObject; // 公开需要变色的物体
+    public float explosionDamage = 50f;
+    public GameObject colorChangeObject;
     public Color startColor = Color.white;
     public Color warningColor = Color.red;
-    public float pulseSpeed = 4f;
 
     private Transform target;
     private bool hasExploded = false;
     private float prepareTimer = 0f;
     private Material material;
     private Vector3 originalScale;
+    private bool hasDamagedPlayer = false;
+    private bool canMove = true;  // 新增：控制是否可以移动
 
     void Start()
     {
-        // 如果没有指定变色物体，就用自身
         if (colorChangeObject == null)
         {
             colorChangeObject = gameObject;
         }
 
-        // 获取材质
         Renderer renderer = colorChangeObject.GetComponent<Renderer>();
         if (renderer != null)
         {
@@ -56,14 +49,13 @@ public class GuaiiKaoJin : MonoBehaviour
 
         float distance = Vector3.Distance(transform.position, target.position);
 
-        if (distance > stopDistance&& movementEnabled==true)
+        // 修改：只有当可以移动时才移动
+        if (distance > stopDistance && canMove)
         {
-            // 靠近玩家
             transform.position += (target.position - transform.position).normalized * moveSpeed * Time.deltaTime;
         }
         else if (!hasExploded)
         {
-            // 更新准备爆炸效果
             prepareTimer += Time.deltaTime;
             UpdateVisualEffect();
 
@@ -79,31 +71,29 @@ public class GuaiiKaoJin : MonoBehaviour
         if (material != null && colorChangeObject != null)
         {
             float t = prepareTimer / prepareTime;
-            movementEnabled = false;
-            // 限制移动
-            // 颜色渐变
             material.color = Color.Lerp(startColor, warningColor, t);
+            colorChangeObject.transform.localScale = originalScale * (Mathf.Sin(t * Mathf.PI * 4f) * 0.15f * t + 1f);
 
-            // 脉冲缩放效果
-            float pulse = Mathf.Sin(t * Mathf.PI * pulseSpeed) * 0.15f * t + 1f;
-            colorChangeObject.transform.localScale = originalScale * pulse;
+            // 新增：当开始准备爆炸时，禁止移动
+            if (t > 0)
+            {
+                canMove = false;
+            }
         }
     }
 
     void Explode()
     {
         hasExploded = true;
-        
+        canMove = false;  // 确保爆炸后不能移动
 
-        // 最终变成红色
         if (material != null)
         {
             material.color = warningColor;
         }
 
-        Debug.Log("爆炸！");
+        CreateExplosionCollider();
 
-        // 推开附近物体
         Collider[] colliders = Physics.OverlapSphere(transform.position, explosionRadius);
 
         foreach (Collider col in colliders)
@@ -120,6 +110,36 @@ public class GuaiiKaoJin : MonoBehaviour
         }
 
         Destroy(gameObject, 1f);
+    }
+
+    void CreateExplosionCollider()
+    {
+        GameObject explosionCollider = new GameObject("ExplosionCollider");
+        explosionCollider.transform.SetParent(transform);
+        explosionCollider.transform.localPosition = Vector3.zero;
+
+        SphereCollider sphereCollider = explosionCollider.AddComponent<SphereCollider>();
+        sphereCollider.isTrigger = true;
+        sphereCollider.radius = explosionRadius;
+
+        MonsterExplosionDamage explosionDamageScript = explosionCollider.AddComponent<MonsterExplosionDamage>();
+        explosionDamageScript.damageAmount = explosionDamage;
+        explosionDamageScript.playerTag = targetTag;
+        explosionDamageScript.sourceObject = this;
+
+        Rigidbody rb = explosionCollider.AddComponent<Rigidbody>();
+        rb.isKinematic = true;
+        rb.useGravity = false;
+    }
+
+    public void MarkPlayerAsDamaged()
+    {
+        hasDamagedPlayer = true;
+    }
+
+    public bool HasDamagedPlayer()
+    {
+        return hasDamagedPlayer;
     }
 
     IEnumerator PushPlayer(GameObject player)
@@ -147,16 +167,5 @@ public class GuaiiKaoJin : MonoBehaviour
         {
             target = other.transform;
         }
-    }
-
-    void OnDrawGizmosSelected()
-    {
-        // 爆炸范围
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, explosionRadius);
-
-        // 停止距离
-        Gizmos.color = Color.blue;
-        Gizmos.DrawWireSphere(transform.position, stopDistance);
     }
 }

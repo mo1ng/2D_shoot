@@ -106,7 +106,6 @@ GameObject:
   - component: {fileID: 1887584049207086384}
   - component: {fileID: 8076453816168593918}
   - component: {fileID: 9184629089676660397}
-  - component: {fileID: 8357772905308187959}
   m_Layer: 0
   m_Name: Creeper
   m_TagString: Untagged
@@ -270,6 +269,7 @@ MonoBehaviour:
   playerPushForce: 25
   pushDuration: 0.3
   prepareTime: 1
+  explosionDamage: 25
   colorChangeObject: {fileID: 5078398038271134819}
   startColor: {r: 1, g: 1, b: 1, a: 1}
   warningColor: {r: 1, g: 0, b: 0, a: 1}
@@ -295,15 +295,3 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 6
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &8357772905308187959
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6622838863073063913}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7625f8aa240265245b8a5da009d5ec0e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ShangHai

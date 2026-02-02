@@ -27,7 +27,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 4, y: 4, z: 4}
+  m_LocalScale: {x: 5, y: 5, z: 5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4232563663762812179}
@@ -115,7 +115,7 @@ Transform:
   m_GameObject: {fileID: 4851594794581674482}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.91, y: 0, z: 0}
+  m_LocalPosition: {x: 0.91, y: 0.299, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -286,7 +286,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 5
+  m_Radius: 8
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &6896138255043563565
 MonoBehaviour:
@@ -305,7 +305,7 @@ MonoBehaviour:
   stopAndShootThreshold: 0.5
   bulletPrefab: {fileID: 3915872339184485368, guid: 3baac2f9985cf5a48b732de59ea7c09b, type: 3}
   firePoint: {fileID: 4174154322584799824}
-  fireRate: 1
+  fireRate: 2
   bulletSpeed: 10
 --- !u!114 &440573447990618047
 MonoBehaviour:
