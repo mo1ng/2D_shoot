@@ -3,14 +3,14 @@ using System.Collections;
 
 public class GuaiSheJi : MonoBehaviour
 {
-    [Header("Ä¿±êÉèÖÃ")]
+    [Header("Ä¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½")]
     public string targetTag = "Player";
 
-    [Header("ÒÆ¶¯ÉèÖÃ")]
+    [Header("ï¿½Æ¶ï¿½ï¿½ï¿½ï¿½ï¿½")]
     public float moveSpeed = 3f;
-    public float stopAndShootThreshold = 0.5f; // Í£Ö¹ÒÆ¶¯ºÍÔÊÐíÉä»÷µÄãÐÖµ£¨ÏàÍ¬ÊýÖµ£©
+    public float stopAndShootThreshold = 0.5f; // Í£Ö¹ï¿½Æ¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½ï¿½ï¿½Í¬ï¿½ï¿½Öµï¿½ï¿½
 
-    [Header("Éä»÷ÉèÖÃ")]
+    [Header("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½")]
     public GameObject bulletPrefab;
     public Transform firePoint;
     public float fireRate = 1f;
@@ -34,16 +34,16 @@ public class GuaiSheJi : MonoBehaviour
     {
         if (!isTargetInRange || target == null) return;
 
-        // 1. ÏòPlayerµÄZÖáÒÆ¶¯£¬Ö±µ½´ïµ½ãÐÖµ
+        // 1. ï¿½ï¿½Playerï¿½ï¿½Zï¿½ï¿½ï¿½Æ¶ï¿½ï¿½ï¿½Ö±ï¿½ï¿½ï¿½ïµ½ï¿½ï¿½Öµ
         MoveToTargetZ();
 
-        // 2. ¸ù¾ÝPlayerÔÚ×ó»¹ÊÇÓÒÉèÖÃ·½Ïò
+        // 2. ï¿½ï¿½ï¿½ï¿½Playerï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã·ï¿½ï¿½ï¿½
         SetDirection();
 
-        // 3. ¼ì²éÊÇ·ñÔÚãÐÖµ·¶Î§ÄÚ£¨ÔÊÐíÉä»÷£©
+        // 3. ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½Î§ï¿½Ú£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         CheckShootingCondition();
 
-        // 4. Éä»÷£¨Ö»ÔÚãÐÖµ·¶Î§ÄÚ£©
+        // 4. ï¿½ï¿½ï¿½ï¿½ï¿½Ö»ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½Î§ï¿½Ú£ï¿½
         if (canShoot)
         {
             fireTimer += Time.deltaTime;
@@ -55,7 +55,7 @@ public class GuaiSheJi : MonoBehaviour
         }
         else
         {
-            fireTimer = 0f; // ²»ÔÚÉä»÷·¶Î§Ê±ÖØÖÃ¼ÆÊ±Æ÷
+            fireTimer = 0f; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î§Ê±ï¿½ï¿½ï¿½Ã¼ï¿½Ê±ï¿½ï¿½
         }
     }
 
@@ -63,37 +63,37 @@ public class GuaiSheJi : MonoBehaviour
     {
         float zDiff = Mathf.Abs(transform.position.z - target.position.z);
 
-        // Ö»ÓÐÔÚ¾àÀë´óÓÚãÐÖµÊ±²ÅÒÆ¶¯
+        // Ö»ï¿½ï¿½ï¿½Ú¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÖµÊ±ï¿½ï¿½ï¿½Æ¶ï¿½
         if (zDiff > stopAndShootThreshold)
         {
             Vector3 newPos = transform.position;
             newPos.z = Mathf.MoveTowards(newPos.z, target.position.z, moveSpeed * Time.deltaTime);
             transform.position = newPos;
 
-            // µ÷ÊÔÐÅÏ¢£ºÕýÔÚÒÆ¶¯
+            // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ¶ï¿½
             if (Time.frameCount % 60 == 0)
-                Debug.Log($"ÕýÔÚÏòZÖáÒÆ¶¯£¬µ±Ç°²îÖµ: {zDiff:F2}£¬ãÐÖµ: {stopAndShootThreshold}");
+                Debug.Log($"ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Zï¿½ï¿½ï¿½Æ¶ï¿½ï¿½ï¿½ï¿½ï¿½Ç°ï¿½ï¿½Öµ: {zDiff:F2}ï¿½ï¿½ï¿½ï¿½Öµ: {stopAndShootThreshold}");
         }
         else
         {
-            // ÒÑ¾­½øÈëãÐÖµ·¶Î§£¬Í£Ö¹ÒÆ¶¯
+            // ï¿½Ñ¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½Î§ï¿½ï¿½Í£Ö¹ï¿½Æ¶ï¿½
             if (Time.frameCount % 60 == 0)
-                Debug.Log($"ÒÑ´ïµ½ãÐÖµ·¶Î§£¬Í£Ö¹ÒÆ¶¯£¬²îÖµ: {zDiff:F2}");
+                Debug.Log($"ï¿½Ñ´ïµ½ï¿½ï¿½Öµï¿½ï¿½Î§ï¿½ï¿½Í£Ö¹ï¿½Æ¶ï¿½ï¿½ï¿½ï¿½ï¿½Öµ: {zDiff:F2}");
         }
     }
 
     void SetDirection()
     {
-        // ÅÐ¶ÏPlayerÔÚ×ó±ß»¹ÊÇÓÒ±ß
+        // ï¿½Ð¶ï¿½Playerï¿½ï¿½ï¿½ï¿½ß»ï¿½ï¿½ï¿½ï¿½Ò±ï¿½
         if (target.position.x > transform.position.x)
         {
-            // PlayerÔÚÓÒ±ß
+            // Playerï¿½ï¿½ï¿½Ò±ï¿½
             transform.eulerAngles = new Vector3(0, 0, 0);
             shootDirection = Vector3.right;
         }
         else
         {
-            // PlayerÔÚ×ó±ß
+            // Playerï¿½ï¿½ï¿½ï¿½ï¿½
             transform.eulerAngles = new Vector3(0, 180, 0);
             shootDirection = Vector3.left;
         }
@@ -101,7 +101,7 @@ public class GuaiSheJi : MonoBehaviour
 
     void CheckShootingCondition()
     {
-        // ¼ì²éZÖá²îÖµÊÇ·ñÔÚãÐÖµÄÚ
+        // ï¿½ï¿½ï¿½Zï¿½ï¿½ï¿½Öµï¿½Ç·ï¿½ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½
         float zDiff = Mathf.Abs(transform.position.z - target.position.z);
         canShoot = zDiff <= stopAndShootThreshold;
     }
@@ -110,42 +110,42 @@ public class GuaiSheJi : MonoBehaviour
     {
         if (bulletPrefab == null)
         {
-            Debug.LogError("Î´ÉèÖÃ×Óµ¯Ô¤ÖÆÌå£¡");
+            Debug.LogError("Î´ï¿½ï¿½ï¿½ï¿½ï¿½Óµï¿½Ô¤ï¿½ï¿½ï¿½å£¡");
             return;
         }
 
         if (firePoint == null)
         {
-            Debug.LogError("Î´ÉèÖÃ·¢Éäµã£¡");
+            Debug.LogError("Î´ï¿½ï¿½ï¿½Ã·ï¿½ï¿½ï¿½ã£¡");
             return;
         }
 
-        // ´´½¨×Óµ¯
+        // ï¿½ï¿½ï¿½ï¿½ï¿½Óµï¿½
         GameObject bullet = Instantiate(bulletPrefab, firePoint.position, Quaternion.identity);
 
-        // Ìí¼ÓRigidbody×é¼þ
+        // ï¿½ï¿½ï¿½ï¿½Rigidbodyï¿½ï¿½ï¿½
         Rigidbody rb = bullet.GetComponent<Rigidbody>();
         if (rb == null)
         {
             rb = bullet.AddComponent<Rigidbody>();
         }
 
-        // ¹Ø±ÕÖØÁ¦£¬±ÜÃâ×Óµ¯ÏÂÂä
+        // ï¿½Ø±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Óµï¿½ï¿½ï¿½ï¿½ï¿½
         rb.useGravity = false;
 
-        // ¸ø×Óµ¯Ò»¸öËÙ¶È
-        rb.velocity = shootDirection * bulletSpeed;
+        // ï¿½ï¿½ï¿½Óµï¿½Ò»ï¿½ï¿½ï¿½Ù¶ï¿½
+        rb.linearVelocity = shootDirection * bulletSpeed;
 
-        // ÉèÖÃ×Óµ¯³¯Ïò
+        // ï¿½ï¿½ï¿½ï¿½ï¿½Óµï¿½ï¿½ï¿½ï¿½ï¿½
         bullet.transform.forward = shootDirection;
 
-        // Ìí¼ÓÅö×²Ïú»Ù×é¼þ
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         bullet.AddComponent<DestroyOnCollision>();
 
-        // 5Ãëºó×Ô¶¯Ïú»Ù
+        // 5ï¿½ï¿½ï¿½ï¿½Ô¶ï¿½ï¿½ï¿½ï¿½ï¿½
         Destroy(bullet, 5f);
 
-        Debug.Log($"Éä»÷£¡·½Ïò: {shootDirection}£¬ËÙ¶È: {bulletSpeed}");
+        Debug.Log($"ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½: {shootDirection}ï¿½ï¿½ï¿½Ù¶ï¿½: {bulletSpeed}");
     }
 
     void CreateFirePoint()
@@ -162,7 +162,7 @@ public class GuaiSheJi : MonoBehaviour
         {
             target = other.transform;
             isTargetInRange = true;
-            Debug.Log("¼ì²âµ½Player½øÈë·¶Î§");
+            Debug.Log("ï¿½ï¿½âµ½Playerï¿½ï¿½ï¿½ë·¶Î§");
         }
     }
 
@@ -171,15 +171,15 @@ public class GuaiSheJi : MonoBehaviour
         if (other.CompareTag(targetTag))
         {
             isTargetInRange = false;
-            canShoot = false; // Àë¿ª·¶Î§ºó²»ÄÜÉä»÷
+            canShoot = false; // ï¿½ë¿ªï¿½ï¿½Î§ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
             target = null;
-            Debug.Log("PlayerÀë¿ª·¶Î§");
+            Debug.Log("Playerï¿½ë¿ªï¿½ï¿½Î§");
         }
     }
 
     void OnDrawGizmosSelected()
     {
-        // ÏÔÊ¾Í£Ö¹ÒÆ¶¯ºÍÉä»÷µÄãÐÖµ·¶Î§
+        // ï¿½ï¿½Ê¾Í£Ö¹ï¿½Æ¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½Î§
         if (target != null)
         {
             Gizmos.color = canShoot ? Color.green : Color.yellow;
@@ -188,12 +188,12 @@ public class GuaiSheJi : MonoBehaviour
             Vector3 lineEnd = center + Vector3.forward * stopAndShootThreshold;
             Gizmos.DrawLine(lineStart, lineEnd);
 
-            // »æÖÆãÐÖµ·¶Î§µÄ·½¿ò
+            // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½Î§ï¿½Ä·ï¿½ï¿½ï¿½
             float boxSize = stopAndShootThreshold * 2;
             Gizmos.DrawWireCube(center, new Vector3(2f, 2f, boxSize));
         }
 
-        // ÏÔÊ¾·¢Éä·½Ïò
+        // ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ä·½ï¿½ï¿½
         if (firePoint != null)
         {
             Gizmos.color = Color.red;
@@ -202,7 +202,7 @@ public class GuaiSheJi : MonoBehaviour
     }
 }
 
-// ×Óµ¯Åö×²Ïú»Ù½Å±¾
+// ï¿½Óµï¿½ï¿½ï¿½×²ï¿½ï¿½ï¿½Ù½Å±ï¿½
 public class DestroyOnCollision : MonoBehaviour
 {
     void OnCollisionEnter(Collision collision)
