@@ -394,6 +394,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GuaiXue
   health: 100
   bulletDamage: 20
+  slowTimeScale: 0
+  slowDuration: 0.1
+  whiteColor: {r: 0, g: 0, b: 0, a: 1}
 --- !u!54 &3995925371478129832
 Rigidbody:
   m_ObjectHideFlags: 0

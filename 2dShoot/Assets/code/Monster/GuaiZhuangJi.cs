@@ -3,42 +3,42 @@ using System.Collections;
 
 public class GuaiZhuangJi : MonoBehaviour
 {
-    [Header("»ù´¡ÉèÖÃ")]
+    [Header("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½")]
     public string playerTag = "Player";
     public float moveSpeed = 3f;
     public float acceleration = 2f;
     public float maxSpeed = 10f;
 
-    [Header("ÇøÓòÉèÖÃ")]
-    public float chaseRadius = 10f;     // ×·Öð·¶Î§°ë¾¶
-    public float pushDistance = 2f;     // ÍÆ¿ª¾àÀë
-    public float maxChaseHeight = 2f;   // ×î´ó×·×Ù¸ß¶È£¨YÖá£©
+    [Header("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½")]
+    public float chaseRadius = 10f;     // ×·ï¿½ï¿½Î§ï¿½ë¾¶
+    public float pushDistance = 2f;     // ï¿½Æ¿ï¿½ï¿½ï¿½ï¿½ï¿½
+    public float maxChaseHeight = 2f;   // ï¿½ï¿½ï¿½×·ï¿½Ù¸ß¶È£ï¿½Yï¿½á£©
 
-    [Header("ÍÆ¿ªÉèÖÃ")]
-    public float pushForce = 15f;      // ÍÆ¿ªÁ¦¶È
-    public float pushDuration = 0.3f;  // ÍÆ¿ª³ÖÐøÊ±¼ä
-    public float pushUpward = 0.3f;    // ÏòÉÏÍÆÁ¦
-    public float pushCooldown = 0.5f;  // ÍÆ¿ªÀäÈ´Ê±¼ä
+    [Header("ï¿½Æ¿ï¿½ï¿½ï¿½ï¿½ï¿½")]
+    public float pushForce = 15f;      // ï¿½Æ¿ï¿½ï¿½ï¿½ï¿½ï¿½
+    public float pushDuration = 0.3f;  // ï¿½Æ¿ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½
+    public float pushUpward = 0.3f;    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    public float pushCooldown = 0.5f;  // ï¿½Æ¿ï¿½ï¿½ï¿½È´Ê±ï¿½ï¿½
 
     private Transform player;
     private Rigidbody rb;
     private float currentSpeed;
     private bool isChasing = false;
-    private bool canPush = true;       // ÊÇ·ñ¿ÉÒÔÍÆ¿ª
-    private bool playerTooHigh = false; // Íæ¼ÒÊÇ·ñÌ«¸ß
+    private bool canPush = true;       // ï¿½Ç·ï¿½ï¿½ï¿½ï¿½ï¿½Æ¿ï¿½
+    private bool playerTooHigh = false; // ï¿½ï¿½ï¿½ï¿½Ç·ï¿½Ì«ï¿½ï¿½
 
     void Start()
     {
         currentSpeed = moveSpeed;
 
-        // »ñÈ¡×ÔÉíµÄ¸ÕÌå
+        // ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½Ä¸ï¿½ï¿½ï¿½
         rb = GetComponent<Rigidbody>();
         if (rb != null)
         {
             rb.constraints = RigidbodyConstraints.FreezeRotation;
         }
 
-        // ²éÕÒÍæ¼Ò
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         FindPlayer();
     }
 
@@ -50,26 +50,26 @@ public class GuaiZhuangJi : MonoBehaviour
             return;
         }
 
-        // ¼ì²éÍæ¼Ò¸ß¶È
+        // ï¿½ï¿½ï¿½ï¿½ï¿½Ò¸ß¶ï¿½
         CheckPlayerHeight();
 
         if (playerTooHigh)
         {
-            // Íæ¼ÒÌ«¸ß£¬Í£Ö¹×·×Ù
+            // ï¿½ï¿½ï¿½Ì«ï¿½ß£ï¿½Í£Ö¹×·ï¿½ï¿½
             isChasing = false;
             return;
         }
 
-        // ¼ÆËãË®Æ½¾àÀë£¨ºöÂÔYÖá£©
+        // ï¿½ï¿½ï¿½ï¿½Ë®Æ½ï¿½ï¿½ï¿½ë£¨ï¿½ï¿½ï¿½ï¿½Yï¿½á£©
         float distance = GetHorizontalDistance();
 
-        // ¼ì²éÊÇ·ñÔÚ×·Öð·¶Î§ÄÚ
+        // ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ï¿½ï¿½×·ï¿½ï¿½Î§ï¿½ï¿½
         if (distance <= chaseRadius && !isChasing)
         {
             isChasing = true;
         }
 
-        // ¼ì²éÊÇ·ñÓ¦¸ÃÍÆ¿ª
+        // ï¿½ï¿½ï¿½ï¿½Ç·ï¿½Ó¦ï¿½ï¿½ï¿½Æ¿ï¿½
         if (distance <= pushDistance && isChasing && canPush)
         {
             PushPlayer();
@@ -80,23 +80,23 @@ public class GuaiZhuangJi : MonoBehaviour
     {
         if (isChasing && player != null && !playerTooHigh && rb != null)
         {
-            // ³¯ÏòÍæ¼Ò
+            // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
             if (player.position.x > transform.position.x)
                 transform.eulerAngles = new Vector3(0, 0, 0);
             else
                 transform.eulerAngles = new Vector3(0, 180, 0);
 
-            // ×·ÖðÍæ¼Ò
+            // ×·ï¿½ï¿½ï¿½ï¿½ï¿½
             ChasePlayer();
         }
         else if (rb != null && !isChasing)
         {
-            // ²»ÔÚ×·ÖðÊ±Í£Ö¹
-            rb.velocity = Vector3.zero;
+            // ï¿½ï¿½ï¿½ï¿½×·ï¿½ï¿½Ê±Í£Ö¹
+            rb.linearVelocity = Vector3.zero;
         }
     }
 
-    // ¼ì²éÍæ¼Ò¸ß¶È
+    // ï¿½ï¿½ï¿½ï¿½ï¿½Ò¸ß¶ï¿½
     void CheckPlayerHeight()
     {
         if (player == null) return;
@@ -104,7 +104,7 @@ public class GuaiZhuangJi : MonoBehaviour
         playerTooHigh = player.position.y > maxChaseHeight;
     }
 
-    // ¼ÆËãË®Æ½¾àÀë£¨ºöÂÔYÖá£©
+    // ï¿½ï¿½ï¿½ï¿½Ë®Æ½ï¿½ï¿½ï¿½ë£¨ï¿½ï¿½ï¿½ï¿½Yï¿½á£©
     float GetHorizontalDistance()
     {
         if (player == null) return float.MaxValue;
@@ -117,26 +117,26 @@ public class GuaiZhuangJi : MonoBehaviour
 
     void ChasePlayer()
     {
-        // ¼ÆËãË®Æ½·½Ïò£¨ºöÂÔYÖá£©
+        // ï¿½ï¿½ï¿½ï¿½Ë®Æ½ï¿½ï¿½ï¿½ò£¨ºï¿½ï¿½ï¿½Yï¿½á£©
         Vector3 playerPos = new Vector3(player.position.x, 0, player.position.z);
         Vector3 myPos = new Vector3(transform.position.x, 0, transform.position.z);
         Vector3 direction = (playerPos - myPos).normalized;
 
         currentSpeed = Mathf.Min(currentSpeed + acceleration * Time.fixedDeltaTime, maxSpeed);
 
-        // Ê¹ÓÃ¸ÕÌåÒÆ¶¯£¨Ë®Æ½ÒÆ¶¯£©
-        Vector3 velocity = new Vector3(direction.x * currentSpeed, rb.velocity.y, direction.z * currentSpeed);
-        rb.velocity = velocity;
+        // Ê¹ï¿½Ã¸ï¿½ï¿½ï¿½ï¿½Æ¶ï¿½ï¿½ï¿½Ë®Æ½ï¿½Æ¶ï¿½ï¿½ï¿½
+        Vector3 velocity = new Vector3(direction.x * currentSpeed, rb.linearVelocity.y, direction.z * currentSpeed);
+        rb.linearVelocity = velocity;
     }
 
-    // ÍÆ¿ªÍæ¼Ò
+    // ï¿½Æ¿ï¿½ï¿½ï¿½ï¿½
     void PushPlayer()
     {
         if (!canPush || player == null || playerTooHigh) return;
 
         canPush = false;
 
-        // ÍÆ¿ªÍæ¼Ò
+        // ï¿½Æ¿ï¿½ï¿½ï¿½ï¿½
         StartCoroutine(PushPlayerCoroutine());
     }
 
@@ -145,7 +145,7 @@ public class GuaiZhuangJi : MonoBehaviour
         CharacterController cc = player.GetComponent<CharacterController>();
         if (cc == null)
         {
-            Debug.LogError("Íæ¼ÒÃ»ÓÐCharacterController×é¼þ£¡");
+            Debug.LogError("ï¿½ï¿½ï¿½Ã»ï¿½ï¿½CharacterControllerï¿½ï¿½ï¿½ï¿½ï¿½");
             canPush = true;
             yield break;
         }
@@ -163,12 +163,12 @@ public class GuaiZhuangJi : MonoBehaviour
             yield return null;
         }
 
-        // ÍÆ¿ªÍê³Éºó£¬µÈ´ýÀäÈ´Ê±¼ä
+        // ï¿½Æ¿ï¿½ï¿½ï¿½Éºó£¬µÈ´ï¿½ï¿½ï¿½È´Ê±ï¿½ï¿½
         yield return new WaitForSeconds(pushCooldown);
         canPush = true;
     }
 
-    // ²éÕÒÍæ¼Ò
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     void FindPlayer()
     {
         GameObject playerObj = GameObject.FindGameObjectWithTag(playerTag);
@@ -178,16 +178,16 @@ public class GuaiZhuangJi : MonoBehaviour
         }
     }
 
-    // ÎïÀíÅö×²¼ì²â
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×²ï¿½ï¿½ï¿½
     void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag(playerTag))
         {
-            // ¼ì²é¸ß¶È
+            // ï¿½ï¿½ï¿½ß¶ï¿½
             CheckPlayerHeight();
             if (playerTooHigh) return;
 
-            // Åö×²µ½Íæ¼ÒÊ±Ò²ÍÆ¿ª
+            // ï¿½ï¿½×²ï¿½ï¿½ï¿½ï¿½ï¿½Ê±Ò²ï¿½Æ¿ï¿½
             if (player == null)
             {
                 player = collision.transform;
@@ -209,22 +209,22 @@ public class GuaiZhuangJi : MonoBehaviour
 
         if (rb != null)
         {
-            rb.velocity = Vector3.zero;
+            rb.linearVelocity = Vector3.zero;
         }
     }
 
-    // ÔÚ³¡¾°ÖÐÏÔÊ¾·¶Î§
+    // ï¿½Ú³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½Î§
     void OnDrawGizmosSelected()
     {
-        // ×·Öð·¶Î§
+        // ×·ï¿½ï¿½Î§
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, chaseRadius);
 
-        // ÍÆ¿ª·¶Î§
+        // ï¿½Æ¿ï¿½ï¿½ï¿½Î§
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, pushDistance);
 
-        // ¸ß¶ÈÏÞÖÆÏß
+        // ï¿½ß¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         Gizmos.color = Color.blue;
         Vector3 heightLineStart = transform.position + Vector3.up * maxChaseHeight;
         Gizmos.DrawLine(heightLineStart - Vector3.right * 5f, heightLineStart + Vector3.right * 5f);

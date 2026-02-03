@@ -108,7 +108,7 @@ GameObject:
   - component: {fileID: 9184629089676660397}
   m_Layer: 0
   m_Name: Creeper
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -222,6 +222,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GuaiXue
   health: 100
   bulletDamage: 20
+  slowTimeScale: 0
+  slowDuration: 0.1
+  whiteColor: {r: 0, g: 0, b: 0, a: 1}
 --- !u!54 &1887584049207086384
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -230,7 +233,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6622838863073063913}
   serializedVersion: 5
-  m_Mass: 1
+  m_Mass: 10
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -264,7 +267,6 @@ MonoBehaviour:
   moveSpeed: 3
   stopDistance: 2
   targetTag: Player
-  movementEnabled: 1
   explosionRadius: 2
   playerPushForce: 25
   pushDuration: 0.3
@@ -273,7 +275,6 @@ MonoBehaviour:
   colorChangeObject: {fileID: 5078398038271134819}
   startColor: {r: 1, g: 1, b: 1, a: 1}
   warningColor: {r: 1, g: 0, b: 0, a: 1}
-  pulseSpeed: 4
 --- !u!135 &9184629089676660397
 SphereCollider:
   m_ObjectHideFlags: 0
