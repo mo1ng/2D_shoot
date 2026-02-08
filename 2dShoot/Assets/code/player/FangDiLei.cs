@@ -19,8 +19,8 @@ public class FangDiLei : MonoBehaviour
     [Header("UI设置")]
     public Text bombCountText;         // 炸弹数量Text
     public Text rechargeText;          // 回复进度Text
-    public string countFormat = "地雷: {0}/{1}";      // 数量显示格式
-    public string rechargeFormat = "回复: {0:P0}";    // 进度显示格式
+    public string countFormat = "{0}/{1}";      // 数量显示格式
+    public string rechargeFormat = "{0:P0}";    // 进度显示格式
 
     // 触发按键枚举
     public enum TriggerButton
@@ -148,7 +148,7 @@ public class FangDiLei : MonoBehaviour
             if (currentBombs >= maxBombs)
             {
                 // 炸弹已满
-                rechargeText.text = "已满";
+                rechargeText.text = "FULL";
                 rechargeText.color = Color.green;
             }
             else
