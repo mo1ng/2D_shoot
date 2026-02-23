@@ -19,6 +19,7 @@ GameObject:
   - component: {fileID: 3971682554248494116}
   - component: {fileID: 6810745877911082541}
   - component: {fileID: 7682424439620314076}
+  - component: {fileID: 369580423755843050}
   m_Layer: 0
   m_Name: player
   m_TagString: Player
@@ -265,7 +266,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1956555998246702588}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 649e76e94a0b3d044bedb5673994003b, type: 3}
   m_Name: 
@@ -274,6 +275,27 @@ MonoBehaviour:
   spawnPoint: {fileID: 3604777528969542282}
   maxBombs: 1
   rechargeTime: 20
+  triggerButton: 1
+  bombCountText: {fileID: 0}
+  rechargeText: {fileID: 0}
+  countFormat: '{0}/{1}'
+  rechargeFormat: '{0:P0}'
+--- !u!114 &369580423755843050
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1956555998246702588}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19a3cbadbba3aaa4fb471d57d56c6eca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FangDiLe2
+  bombPrefab: {fileID: 1558580607011298021, guid: 483e57f9e5e75dd45a3a122a9224b044, type: 3}
+  spawnPoint: {fileID: 3604777528969542282}
+  maxBombs: 1
+  rechargeTime: 10
   triggerButton: 1
   bombCountText: {fileID: 0}
   rechargeText: {fileID: 0}
