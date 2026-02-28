@@ -21,7 +21,7 @@ public class GuaiiKaoJin : MonoBehaviour
     private Material material;
     private Vector3 originalScale;
     private bool hasDamagedPlayer = false;
-    private bool canMove = true;  // 新增：控制是否可以移动
+    private bool canMove = true;  // 控制是否可以移动
 
     void Start()
     {
@@ -49,9 +49,22 @@ public class GuaiiKaoJin : MonoBehaviour
 
         float distance = Vector3.Distance(transform.position, target.position);
 
-        // 修改：只有当可以移动时才移动
+        // 当可以移动时，根据玩家位置设置朝向
         if (distance > stopDistance && canMove)
         {
+            // 设置怪物朝向：玩家在左侧时y=0，在右侧时y=-180
+            if (target.position.x > transform.position.x)
+            {
+                // 玩家在右侧，朝向右边（y = 0）
+                transform.rotation = Quaternion.Euler(0, 0, 0);
+            }
+            else
+            {
+                // 玩家在左侧，朝向左边（y = -180）
+                transform.rotation = Quaternion.Euler(0, -180, 0);
+            }
+
+            // 向玩家移动
             transform.position += (target.position - transform.position).normalized * moveSpeed * Time.deltaTime;
         }
         else if (!hasExploded)
@@ -74,7 +87,7 @@ public class GuaiiKaoJin : MonoBehaviour
             material.color = Color.Lerp(startColor, warningColor, t);
             colorChangeObject.transform.localScale = originalScale * (Mathf.Sin(t * Mathf.PI * 4f) * 0.15f * t + 1f);
 
-            // 新增：当开始准备爆炸时，禁止移动
+            // 当开始准备爆炸时，禁止移动
             if (t > 0)
             {
                 canMove = false;

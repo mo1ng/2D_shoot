@@ -1,44 +1,43 @@
 using UnityEngine;
-using System.Collections;
 
 public class GuaiZhuangJi : MonoBehaviour
 {
-    [Header("��������")]
+    [Header("追击参数")]
     public string playerTag = "Player";
     public float moveSpeed = 3f;
     public float acceleration = 2f;
     public float maxSpeed = 10f;
 
-    [Header("��������")]
-    public float chaseRadius = 10f;     // ׷��Χ�뾶
-    public float pushDistance = 2f;     // �ƿ�����
-    public float maxChaseHeight = 2f;   // ���׷�ٸ߶ȣ�Y�ᣩ
+    [Header("追击范围")]
+    public float chaseRadius = 10f;     // 追击范围半径
+    public float stopDistance = 2f;     // 距离玩家多近时停止追击
+    public float maxChaseHeight = 2f;   // 最大追击高度（Y轴）
 
-    [Header("�ƿ�����")]
-    public float pushForce = 15f;      // �ƿ�����
-    public float pushDuration = 0.3f;  // �ƿ�����ʱ��
-    public float pushUpward = 0.3f;    // ��������
-    public float pushCooldown = 0.5f;  // �ƿ���ȴʱ��
+    [Header("冻结参数")]
+    public int freezeLevel = 1;          // 冻结等级：1=1秒，2=2秒，3=3秒
+    public float freezeDuration = 2f;    // 保留原始冻结时间作为备选
+
+    [Header("销毁设置")]
+    public bool destroyOnTouch = true;   // 碰到玩家时是否销毁自身
+    public float destroyDelay = 0f;      // 销毁延迟时间（秒）
 
     private Transform player;
     private Rigidbody rb;
     private float currentSpeed;
     private bool isChasing = false;
-    private bool canPush = true;       // �Ƿ�����ƿ�
-    private bool playerTooHigh = false; // ����Ƿ�̫��
+    private bool playerTooHigh = false;
+    private playermovement playerMovement; // 引用你的玩家移动脚本
+    private bool hasTouchedPlayer = false; // 防止重复触发
 
     void Start()
     {
         currentSpeed = moveSpeed;
-
-        // ��ȡ�����ĸ���
         rb = GetComponent<Rigidbody>();
         if (rb != null)
         {
             rb.constraints = RigidbodyConstraints.FreezeRotation;
         }
 
-        // �������
         FindPlayer();
     }
 
@@ -50,29 +49,26 @@ public class GuaiZhuangJi : MonoBehaviour
             return;
         }
 
-        // �����Ҹ߶�
         CheckPlayerHeight();
 
         if (playerTooHigh)
         {
-            // ���̫�ߣ�ֹͣ׷��
             isChasing = false;
             return;
         }
 
-        // ����ˮƽ���루����Y�ᣩ
         float distance = GetHorizontalDistance();
 
-        // ����Ƿ���׷��Χ��
+        // 判断是否在追击范围内
         if (distance <= chaseRadius && !isChasing)
         {
             isChasing = true;
         }
 
-        // ����Ƿ�Ӧ���ƿ�
-        if (distance <= pushDistance && isChasing && canPush)
+        // 判断是否停止追击（距离小于停止距离）
+        if (distance <= stopDistance && isChasing)
         {
-            PushPlayer();
+            isChasing = false;
         }
     }
 
@@ -80,31 +76,26 @@ public class GuaiZhuangJi : MonoBehaviour
     {
         if (isChasing && player != null && !playerTooHigh && rb != null)
         {
-            // �������
+            // 面向玩家
             if (player.position.x > transform.position.x)
                 transform.eulerAngles = new Vector3(0, 0, 0);
             else
                 transform.eulerAngles = new Vector3(0, 180, 0);
 
-            // ׷�����
             ChasePlayer();
         }
         else if (rb != null && !isChasing)
         {
-            // ����׷��ʱֹͣ
             rb.linearVelocity = Vector3.zero;
         }
     }
 
-    // �����Ҹ߶�
     void CheckPlayerHeight()
     {
         if (player == null) return;
-
         playerTooHigh = player.position.y > maxChaseHeight;
     }
 
-    // ����ˮƽ���루����Y�ᣩ
     float GetHorizontalDistance()
     {
         if (player == null) return float.MaxValue;
@@ -117,95 +108,101 @@ public class GuaiZhuangJi : MonoBehaviour
 
     void ChasePlayer()
     {
-        // ����ˮƽ���򣨺���Y�ᣩ
         Vector3 playerPos = new Vector3(player.position.x, 0, player.position.z);
         Vector3 myPos = new Vector3(transform.position.x, 0, transform.position.z);
         Vector3 direction = (playerPos - myPos).normalized;
 
         currentSpeed = Mathf.Min(currentSpeed + acceleration * Time.fixedDeltaTime, maxSpeed);
-
-        // ʹ�ø����ƶ���ˮƽ�ƶ���
         Vector3 velocity = new Vector3(direction.x * currentSpeed, rb.linearVelocity.y, direction.z * currentSpeed);
         rb.linearVelocity = velocity;
     }
 
-    // �ƿ����
-    void PushPlayer()
+    void OnTriggerEnter(Collider other)
     {
-        if (!canPush || player == null || playerTooHigh) return;
+        if (other.CompareTag(playerTag) && !hasTouchedPlayer)
+        {
+            CheckPlayerHeight();
+            if (playerTooHigh) return;
 
-        canPush = false;
+            if (player == null)
+            {
+                player = other.transform;
+            }
 
-        // �ƿ����
-        StartCoroutine(PushPlayerCoroutine());
+            // 获取玩家身上的PlayerMovement脚本并冻结
+            if (playerMovement == null)
+            {
+                playerMovement = other.GetComponent<playermovement>();
+            }
+
+            if (playerMovement != null)
+            {
+                hasTouchedPlayer = true; // 标记已触碰，防止重复触发
+
+                // 根据freezeLevel调用不同的冻结方法
+                switch (freezeLevel)
+                {
+                    case 1:
+                        playerMovement.FreezeLevel1();
+                        break;
+                    case 2:
+                        playerMovement.FreezeLevel2();
+                        break;
+                    case 3:
+                        playerMovement.FreezeLevel3();
+                        break;
+                    default:
+                        // 默认使用level1
+                        playerMovement.FreezeLevel1();
+                        break;
+                }
+
+                // 如果启用了销毁功能，销毁自身
+                if (destroyOnTouch)
+                {
+                    DestroySelf();
+                }
+            }
+        }
     }
 
-    IEnumerator PushPlayerCoroutine()
+    // 销毁自身的方法
+    void DestroySelf()
     {
-        CharacterController cc = player.GetComponent<CharacterController>();
-        if (cc == null)
+        if (destroyDelay > 0)
         {
-            Debug.LogError("���û��CharacterController�����");
-            canPush = true;
-            yield break;
+            // 如果有延迟，先禁用碰撞器和渲染器，然后延迟销毁
+            Collider col = GetComponent<Collider>();
+            if (col != null) col.enabled = false;
+
+            Renderer renderer = GetComponent<Renderer>();
+            if (renderer != null) renderer.enabled = false;
+
+            Destroy(gameObject, destroyDelay);
         }
-
-        Vector3 pushDir = (player.position - transform.position).normalized;
-        pushDir.y = pushUpward;
-
-        float elapsed = 0f;
-
-        while (elapsed < pushDuration)
+        else
         {
-            float force = Mathf.Lerp(pushForce, 0, elapsed / pushDuration);
-            cc.Move(pushDir * force * Time.deltaTime);
-            elapsed += Time.deltaTime;
-            yield return null;
+            // 立即销毁
+            Destroy(gameObject);
         }
-
-        // �ƿ���ɺ󣬵ȴ���ȴʱ��
-        yield return new WaitForSeconds(pushCooldown);
-        canPush = true;
     }
 
-    // �������
     void FindPlayer()
     {
         GameObject playerObj = GameObject.FindGameObjectWithTag(playerTag);
         if (playerObj != null)
         {
             player = playerObj.transform;
-        }
-    }
-
-    // ������ײ���
-    void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.CompareTag(playerTag))
-        {
-            // ���߶�
-            CheckPlayerHeight();
-            if (playerTooHigh) return;
-
-            // ��ײ�����ʱҲ�ƿ�
-            if (player == null)
-            {
-                player = collision.transform;
-            }
-
-            if (canPush)
-            {
-                PushPlayer();
-            }
+            playerMovement = playerObj.GetComponent<playermovement>();
         }
     }
 
     public void ResetState()
     {
         isChasing = false;
-        canPush = true;
         playerTooHigh = false;
         currentSpeed = moveSpeed;
+        hasTouchedPlayer = false;
 
         if (rb != null)
         {
@@ -213,18 +210,17 @@ public class GuaiZhuangJi : MonoBehaviour
         }
     }
 
-    // �ڳ�������ʾ��Χ
     void OnDrawGizmosSelected()
     {
-        // ׷��Χ
+        // 追击范围
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, chaseRadius);
 
-        // �ƿ���Χ
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, pushDistance);
+        // 停止距离范围
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(transform.position, stopDistance);
 
-        // �߶�������
+        // 高度限制线
         Gizmos.color = Color.blue;
         Vector3 heightLineStart = transform.position + Vector3.up * maxChaseHeight;
         Gizmos.DrawLine(heightLineStart - Vector3.right * 5f, heightLineStart + Vector3.right * 5f);
