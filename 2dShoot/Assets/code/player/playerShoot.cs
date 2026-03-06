@@ -17,8 +17,8 @@ public class AdvancedShooter : MonoBehaviour
     public float reloadTime = 1.5f;    // 换弹时间
 
     [Header("UI组件")]
-    public Text ammoText;              // 弹药显示文本（显示弹匣内子弹/总子弹）
-    public Text totalAmmoText;         // 总弹药显示文本（显示总子弹/最大子弹）
+    public TextMesh ammoText;              // 弹药显示文本（显示弹匣内子弹/总子弹）
+    public TextMesh totalAmmoText;         // 总弹药显示文本（显示总子弹/最大子弹）
     public Slider reloadSlider;        // 换弹进度条（可选）
     public GameObject reloadUI;        // 换弹提示UI（可选）
 
@@ -293,7 +293,7 @@ public class AdvancedShooter : MonoBehaviour
     }
 
     // 添加总弹药显示UI的方法（可以在编辑器中调用）
-    public void SetTotalAmmoUI(Text uiText)
+    public void SetTotalAmmoUI(TextMesh uiText)
     {
         totalAmmoText = uiText;
         UpdateTotalBullets();

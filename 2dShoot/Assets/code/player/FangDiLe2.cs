@@ -1,36 +1,39 @@
 using UnityEngine;
-using UnityEngine.UI;
 using System.Collections.Generic;
 using UnityEngine.InputSystem;
 
 public class FangDiLe2 : MonoBehaviour
-
 {
-    [Header("Ԥ��������")]
-    public GameObject bombPrefab;      // ը��Ԥ����
-    public Transform spawnPoint;       // ����λ��
+    [Header("预制体设置")]
+    public GameObject bombPrefab;      // 炸弹预制体
+    public Transform spawnPoint;       // 生成位置
 
-    [Header("��������")]
-    public int maxBombs = 3;           // ���ը������
-    public float rechargeTime = 15f;   // �ظ�ʱ�䣨�룩
+    [Header("基础属性")]
+    public int maxBombs = 3;           // 最大炸弹数量
+    public float rechargeTime = 15f;   // 恢复时间（秒）
 
-    [Header("��������")]
-    public TriggerButton triggerButton = TriggerButton.RightMouse; // ��������
+    [Header("触发设置")]
+    public TriggerButton triggerButton = TriggerButton.RightMouse; // 触发按键
 
-    [Header("UI����")]
-    public Text bombCountText;         // ը������Text
-    public Text rechargeText;          // �ظ�����Text
-    public string countFormat = "{0}/{1}";      // ������ʾ��ʽ
-    public string rechargeFormat = "{0:P0}";    // ������ʾ��ʽ
+    [Header("3D UI设置")]
+    public TextMesh bombCount3DText;      // 炸弹数量的3D文本
+    public TextMesh recharge3DText;       // 恢复进度的3D文本
 
-    // ��������ö��
+    public string countFormat = "{0}/{1}";      // 数量显示格式
+    public string rechargeFormat = "{0:P0}";    // 进度显示格式
+
+    // 如果3D文本是模型的一部分，可能需要设置相对位置
+    public Vector3 uiOffset = Vector3.zero;      // UI相对位置的偏移量
+    public Transform uiParent;                    // UI的父对象（通常是模型本身）
+
+    // 触发按键枚举
     public enum TriggerButton
     {
-        RightMouse,    // ����Ҽ�
-        MiddleMouse    // ����м�
+        RightMouse,    // 鼠标右键
+        MiddleMouse    // 鼠标中键
     }
 
-    // ˽�б���
+    // 私有变量
     private int currentBombs;
     private float rechargeTimer;
     private List<GameObject> placedBombs = new List<GameObject>();
@@ -40,32 +43,73 @@ public class FangDiLe2 : MonoBehaviour
         currentBombs = maxBombs;
         rechargeTimer = 0f;
 
-        // ��ʼ��UI
+        // 初始化3D UI
+        Initialize3DUI();
         UpdateCountUI();
         UpdateRechargeUI();
 
-        Debug.Log("����ϵͳ��ʼ�����");
+        Debug.Log("炸弹系统初始化完成");
+    }
+
+    // 初始化3D UI
+    void Initialize3DUI()
+    {
+        // 如果指定了UI父对象，可以设置UI的相对位置
+        if (uiParent != null)
+        {
+            if (bombCount3DText != null)
+            {
+                bombCount3DText.transform.SetParent(uiParent);
+                bombCount3DText.transform.localPosition = uiOffset;
+            }
+            if (recharge3DText != null)
+            {
+                recharge3DText.transform.SetParent(uiParent);
+                // 可以设置不同的偏移量，这里让恢复文本在数量文本下方
+                recharge3DText.transform.localPosition = uiOffset + new Vector3(0, -0.5f, 0);
+            }
+        }
     }
 
     void Update()
     {
-        // ��ⰴ������
+        // 检测按键输入
         if (CheckTriggerButton() && currentBombs > 0)
         {
             PlaceBomb();
         }
 
-        // ����ը���ظ�
+        // 处理炸弹恢复
         HandleBombRecharge();
 
-        // ʵʱ���»ظ�����UI
+        // 实时更新恢复进度UI
         if (currentBombs < maxBombs)
         {
             UpdateRechargeUI();
         }
+
+        // 确保3D UI始终面向摄像机（如果需要）
+        // FaceCamera();
     }
 
-    // ��ⴥ������
+    // 如果需要UI始终面向摄像机（像世界空间画布一样）
+    void FaceCamera()
+    {
+        if (bombCount3DText != null && Camera.main != null)
+        {
+            bombCount3DText.transform.rotation = Quaternion.LookRotation(
+                bombCount3DText.transform.position - Camera.main.transform.position
+            );
+        }
+        if (recharge3DText != null && Camera.main != null)
+        {
+            recharge3DText.transform.rotation = Quaternion.LookRotation(
+                recharge3DText.transform.position - Camera.main.transform.position
+            );
+        }
+    }
+
+    // 检测触发按键
     bool CheckTriggerButton()
     {
         if (Mouse.current == null) return false;
@@ -95,7 +139,7 @@ public class FangDiLe2 : MonoBehaviour
                 rechargeTimer = 0f;
                 UpdateCountUI();
                 UpdateRechargeUI();
-                Debug.Log($"ը���ظ�����ǰ����: {currentBombs}/{maxBombs}");
+                Debug.Log($"炸弹已恢复，当前数量: {currentBombs}/{maxBombs}");
             }
         }
         else
@@ -108,7 +152,7 @@ public class FangDiLe2 : MonoBehaviour
     {
         if (bombPrefab == null)
         {
-            Debug.LogError("����ը��Ԥ����δ���ã�");
+            Debug.LogError("请设置炸弹预制体！");
             return;
         }
 
@@ -121,62 +165,62 @@ public class FangDiLe2 : MonoBehaviour
         UpdateCountUI();
         UpdateRechargeUI();
 
-        Debug.Log($"���õ��׳ɹ���ʣ������: {currentBombs}/{maxBombs}");
+        Debug.Log($"安放炸弹成功，剩余数量: {currentBombs}/{maxBombs}");
     }
 
-    // ��������UI
+    // 更新数量UI
     void UpdateCountUI()
     {
-        if (bombCountText != null)
+        if (bombCount3DText != null)
         {
-            bombCountText.text = string.Format(countFormat, currentBombs, maxBombs);
+            bombCount3DText.text = string.Format(countFormat, currentBombs, maxBombs);
 
-            // ���������ı���ɫ
+            // 根据数量改变文本颜色
             if (currentBombs == 0)
-                bombCountText.color = Color.red;
+                bombCount3DText.color = Color.red;
             else if (currentBombs < maxBombs / 2)
-                bombCountText.color = Color.yellow;
+                bombCount3DText.color = Color.yellow;
             else
-                bombCountText.color = Color.green;
+                bombCount3DText.color = Color.green;
         }
     }
 
-    // ���»ظ�����UI
+    // 更新恢复进度UI
     void UpdateRechargeUI()
     {
-        if (rechargeText != null)
+        if (recharge3DText != null)
         {
             if (currentBombs >= maxBombs)
             {
-                // ը������
-                rechargeText.text = "FULL";
-                rechargeText.color = Color.green;
+                // 炸弹已满
+                recharge3DText.text = "FULL";
+                recharge3DText.color = Color.green;
             }
             else
             {
-                // ������Ȱٷֱ�
+                // 显示恢复进度百分比
                 float progress = GetRechargeProgress();
-                rechargeText.text = string.Format(rechargeFormat, progress);
+                recharge3DText.text = string.Format(rechargeFormat, progress);
 
-                // ���ݽ��ȸı���ɫ
+                // 根据进度改变颜色
                 if (progress < 0.33f)
-                    rechargeText.color = Color.red;
+                    recharge3DText.color = Color.red;
                 else if (progress < 0.66f)
-                    rechargeText.color = Color.yellow;
+                    recharge3DText.color = Color.yellow;
                 else
-                    rechargeText.color = Color.green;
+                    recharge3DText.color = Color.green;
             }
         }
     }
 
-    // ��ȡ�ظ����ȣ�0-1��
+    // 获取恢复进度（0-1）
     float GetRechargeProgress()
     {
         if (currentBombs >= maxBombs) return 0f;
         return Mathf.Clamp01(rechargeTimer / rechargeTime);
     }
 
-    // ========== �������� ==========
+    // ========== 公开方法 ==========
 
     public void AddBomb(int amount = 1)
     {
@@ -225,6 +269,24 @@ public class FangDiLe2 : MonoBehaviour
             if (bomb != null) Destroy(bomb);
         }
         placedBombs.Clear();
+    }
+
+    // 显示/隐藏3D UI
+    public void Show3DUI(bool show)
+    {
+        if (bombCount3DText != null)
+            bombCount3DText.gameObject.SetActive(show);
+        if (recharge3DText != null)
+            recharge3DText.gameObject.SetActive(show);
+    }
+
+    // 设置UI相对位置
+    public void SetUIPosition(Vector3 position)
+    {
+        if (bombCount3DText != null)
+            bombCount3DText.transform.localPosition = position;
+        if (recharge3DText != null)
+            recharge3DText.transform.localPosition = position + new Vector3(0, -0.5f, 0);
     }
 
     void LateUpdate()

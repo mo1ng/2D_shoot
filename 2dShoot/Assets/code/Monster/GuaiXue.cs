@@ -13,6 +13,9 @@ public class GuaiXue : MonoBehaviour
     // 白屏效果参数
     public Color whiteColor = Color.white; // 白色颜色值
 
+    // 新增：血量显示TextMesh
+    public TextMesh healthText;
+
     // 内部状态变量
     private float originalTimeScale;     // 原始游戏速度（用于恢复）
     private bool isSlowing = false;      // 是否正在慢动作状态
@@ -42,6 +45,9 @@ public class GuaiXue : MonoBehaviour
                 }
             }
         }
+
+        // 初始化血量显示
+        UpdateHealthText();
     }
 
     void Update()
@@ -57,6 +63,17 @@ public class GuaiXue : MonoBehaviour
             {
                 RestoreEffects();
             }
+        }
+
+        // 实时更新血量显示
+        UpdateHealthText();
+    }
+
+    void UpdateHealthText()
+    {
+        if (healthText != null)
+        {
+            healthText.text = "HP: " + health.ToString("F0");
         }
     }
 

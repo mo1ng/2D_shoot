@@ -4,11 +4,10 @@ using UnityEngine.SceneManagement;
 using System.Collections;
 
 public class Xue : MonoBehaviour
-
 {
     public float maxHealth = 100f;           // 最大血量
     public float currentHealth;              // 当前血量
-    public Text healthText;                  // 显示血量的Text组件
+    public TextMesh healthText;                  // 显示血量的Text组件（使用旧版Text）
     public float reloadDelay = 2f;           // 死亡后重载延迟
 
     void Start()

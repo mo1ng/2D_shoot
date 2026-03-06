@@ -15,6 +15,9 @@ public class GuaiiKaoJin : MonoBehaviour
     public Color startColor = Color.white;
     public Color warningColor = Color.red;
 
+    // 新增：爆炸倒计时TextMesh
+    public TextMesh timerText;
+
     private Transform target;
     private bool hasExploded = false;
     private float prepareTimer = 0f;
@@ -71,6 +74,7 @@ public class GuaiiKaoJin : MonoBehaviour
         {
             prepareTimer += Time.deltaTime;
             UpdateVisualEffect();
+            UpdateTimerText();
 
             if (prepareTimer >= prepareTime)
             {
@@ -92,6 +96,15 @@ public class GuaiiKaoJin : MonoBehaviour
             {
                 canMove = false;
             }
+        }
+    }
+
+    void UpdateTimerText()
+    {
+        if (timerText != null)
+        {
+            float remainingTime = prepareTime - prepareTimer;
+            timerText.text = "Bomb: " + remainingTime.ToString("F1") + "s";
         }
     }
 

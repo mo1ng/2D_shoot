@@ -3,18 +3,17 @@ using System.Collections;
 
 public class GuaiSheJi : MonoBehaviour
 {
-    [Header("Ŀ������")]
     public string targetTag = "Player";
 
-    [Header("�ƶ�����")]
     public float moveSpeed = 3f;
-    public float stopAndShootThreshold = 0.5f; // ֹͣ�ƶ��������������ֵ����ͬ��ֵ��
+    public float stopAndShootThreshold = 0.5f;
 
-    [Header("�������")]
     public GameObject bulletPrefab;
     public Transform firePoint;
     public float fireRate = 1f;
     public float bulletSpeed = 15f;
+
+    public TextMesh fireRateText;
 
     private Transform target;
     private bool isTargetInRange = false;
@@ -34,16 +33,12 @@ public class GuaiSheJi : MonoBehaviour
     {
         if (!isTargetInRange || target == null) return;
 
-        // 1. ��Player��Z���ƶ���ֱ���ﵽ��ֵ
         MoveToTargetZ();
 
-        // 2. ����Player�����������÷���
         SetDirection();
 
-        // 3. ����Ƿ�����ֵ��Χ�ڣ����������
         CheckShootingCondition();
 
-        // 4. �����ֻ����ֵ��Χ�ڣ�
         if (canShoot)
         {
             fireTimer += Time.deltaTime;
@@ -55,45 +50,41 @@ public class GuaiSheJi : MonoBehaviour
         }
         else
         {
-            fireTimer = 0f; // ���������Χʱ���ü�ʱ��
+            fireTimer = 0f;
         }
+
+        UpdateFireRateText();
     }
 
     void MoveToTargetZ()
     {
         float zDiff = Mathf.Abs(transform.position.z - target.position.z);
 
-        // ֻ���ھ��������ֵʱ���ƶ�
         if (zDiff > stopAndShootThreshold)
         {
             Vector3 newPos = transform.position;
             newPos.z = Mathf.MoveTowards(newPos.z, target.position.z, moveSpeed * Time.deltaTime);
             transform.position = newPos;
 
-            // ������Ϣ�������ƶ�
             if (Time.frameCount % 60 == 0)
-                Debug.Log($"������Z���ƶ�����ǰ��ֵ: {zDiff:F2}����ֵ: {stopAndShootThreshold}");
+                Debug.Log($"正在Z轴移动，当前差值: {zDiff:F2}，阈值: {stopAndShootThreshold}");
         }
         else
         {
-            // �Ѿ�������ֵ��Χ��ֹͣ�ƶ�
             if (Time.frameCount % 60 == 0)
-                Debug.Log($"�Ѵﵽ��ֵ��Χ��ֹͣ�ƶ�����ֵ: {zDiff:F2}");
+                Debug.Log($"已达到阈值范围，停止移动，差值: {zDiff:F2}");
         }
     }
 
     void SetDirection()
     {
-        // �ж�Player����߻����ұ�
         if (target.position.x > transform.position.x)
         {
-            // Player���ұ�
             transform.eulerAngles = new Vector3(0, 0, 0);
             shootDirection = Vector3.right;
         }
         else
         {
-            // Player�����
             transform.eulerAngles = new Vector3(0, 180, 0);
             shootDirection = Vector3.left;
         }
@@ -101,7 +92,6 @@ public class GuaiSheJi : MonoBehaviour
 
     void CheckShootingCondition()
     {
-        // ���Z���ֵ�Ƿ�����ֵ��
         float zDiff = Mathf.Abs(transform.position.z - target.position.z);
         canShoot = zDiff <= stopAndShootThreshold;
     }
@@ -110,42 +100,35 @@ public class GuaiSheJi : MonoBehaviour
     {
         if (bulletPrefab == null)
         {
-            Debug.LogError("δ�����ӵ�Ԥ���壡");
+            Debug.LogError("未设置子弹预制体！");
             return;
         }
 
         if (firePoint == null)
         {
-            Debug.LogError("δ���÷���㣡");
+            Debug.LogError("未设置发射点！");
             return;
         }
 
-        // �����ӵ�
         GameObject bullet = Instantiate(bulletPrefab, firePoint.position, Quaternion.identity);
 
-        // ����Rigidbody���
         Rigidbody rb = bullet.GetComponent<Rigidbody>();
         if (rb == null)
         {
             rb = bullet.AddComponent<Rigidbody>();
         }
 
-        // �ر������������ӵ�����
         rb.useGravity = false;
 
-        // ���ӵ�һ���ٶ�
         rb.linearVelocity = shootDirection * bulletSpeed;
 
-        // �����ӵ�����
         bullet.transform.forward = shootDirection;
 
-        // ������ײ�������
         bullet.AddComponent<DestroyOnCollision>();
 
-        // 5����Զ�����
         Destroy(bullet, 5f);
 
-        Debug.Log($"���������: {shootDirection}���ٶ�: {bulletSpeed}");
+        Debug.Log($"发射子弹，方向: {shootDirection}，速度: {bulletSpeed}");
     }
 
     void CreateFirePoint()
@@ -156,13 +139,21 @@ public class GuaiSheJi : MonoBehaviour
         firePoint = point.transform;
     }
 
+    void UpdateFireRateText()
+    {
+        if (fireRateText != null)
+        {
+            fireRateText.text = "Fire Rate: " + fireRate.ToString("F1") + "/s";
+        }
+    }
+
     void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag(targetTag))
         {
             target = other.transform;
             isTargetInRange = true;
-            Debug.Log("��⵽Player���뷶Χ");
+            Debug.Log("检测到Player进入范围");
         }
     }
 
@@ -171,15 +162,14 @@ public class GuaiSheJi : MonoBehaviour
         if (other.CompareTag(targetTag))
         {
             isTargetInRange = false;
-            canShoot = false; // �뿪��Χ�������
+            canShoot = false;
             target = null;
-            Debug.Log("Player�뿪��Χ");
+            Debug.Log("Player离开范围");
         }
     }
 
     void OnDrawGizmosSelected()
     {
-        // ��ʾֹͣ�ƶ����������ֵ��Χ
         if (target != null)
         {
             Gizmos.color = canShoot ? Color.green : Color.yellow;
@@ -188,12 +178,10 @@ public class GuaiSheJi : MonoBehaviour
             Vector3 lineEnd = center + Vector3.forward * stopAndShootThreshold;
             Gizmos.DrawLine(lineStart, lineEnd);
 
-            // ������ֵ��Χ�ķ���
             float boxSize = stopAndShootThreshold * 2;
             Gizmos.DrawWireCube(center, new Vector3(2f, 2f, boxSize));
         }
 
-        // ��ʾ���䷽��
         if (firePoint != null)
         {
             Gizmos.color = Color.red;
@@ -202,7 +190,6 @@ public class GuaiSheJi : MonoBehaviour
     }
 }
 
-// �ӵ���ײ���ٽű�
 public class DestroyOnCollision : MonoBehaviour
 {
     void OnCollisionEnter(Collision collision)

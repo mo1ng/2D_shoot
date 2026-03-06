@@ -21,6 +21,8 @@ public class GuaiZhuangJi : MonoBehaviour
     public bool destroyOnTouch = true;   // 碰到玩家时是否销毁自身
     public float destroyDelay = 0f;      // 销毁延迟时间（秒）
 
+    public TextMesh speedText;           // 显示速度的TextMesh
+
     private Transform player;
     private Rigidbody rb;
     private float currentSpeed;
@@ -70,6 +72,9 @@ public class GuaiZhuangJi : MonoBehaviour
         {
             isChasing = false;
         }
+
+        // 更新速度显示
+        UpdateSpeedText();
     }
 
     void FixedUpdate()
@@ -115,6 +120,14 @@ public class GuaiZhuangJi : MonoBehaviour
         currentSpeed = Mathf.Min(currentSpeed + acceleration * Time.fixedDeltaTime, maxSpeed);
         Vector3 velocity = new Vector3(direction.x * currentSpeed, rb.linearVelocity.y, direction.z * currentSpeed);
         rb.linearVelocity = velocity;
+    }
+
+    void UpdateSpeedText()
+    {
+        if (speedText != null)
+        {
+            speedText.text = "Speed" + currentSpeed.ToString("F1");
+        }
     }
 
     void OnTriggerEnter(Collider other)
