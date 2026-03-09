@@ -126,7 +126,7 @@ public class IsFrozenShow : MonoBehaviour
         if (playerMovement != null)
         {
             // 使用Handles来显示文字，避免GUILayout的布局问题
-            UnityEditor.Handles.BeginGUI();
+            //UnityEditor.Handles.BeginGUI();
 
             // 创建GUI样式
             GUIStyle style = new GUIStyle();
@@ -135,11 +135,11 @@ public class IsFrozenShow : MonoBehaviour
             style.fontStyle = FontStyle.Bold;
 
             // 直接在屏幕上绘制文字，不使用BeginArea/EndArea
-            GUI.Label(new Rect(10, 10, 200, 20), $"Level 1: {lastIsFrozen1}", style);
-            GUI.Label(new Rect(10, 30, 200, 20), $"Level 2: {lastIsFrozen2}", style);
-            GUI.Label(new Rect(10, 50, 200, 20), $"Level 3: {lastIsFrozen3}", style);
+            //GUI.Label(new Rect(10, 10, 200, 20), $"Level 1: {lastIsFrozen1}", style);
+            //GUI.Label(new Rect(10, 30, 200, 20), $"Level 2: {lastIsFrozen2}", style);
+            //GUI.Label(new Rect(10, 50, 200, 20), $"Level 3: {lastIsFrozen3}", style);
 
-            UnityEditor.Handles.EndGUI();
+            //UnityEditor.Handles.EndGUI();
         }
     }
 }

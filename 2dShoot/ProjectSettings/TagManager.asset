@@ -8,6 +8,9 @@ TagManager:
   - Boom
   - Enemy
   - ZiDanBu
+  - XueBu
+  - HPLevel2
+  - HPLevel3
   layers:
   - Default
   - TransparentFX

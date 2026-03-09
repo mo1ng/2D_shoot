@@ -1,14 +1,13 @@
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Collections;
 
 public class Xue : MonoBehaviour
 {
-    public float maxHealth = 100f;           // 最大血量
-    public float currentHealth;              // 当前血量
-    public TextMesh healthText;                  // 显示血量的Text组件（使用旧版Text）
-    public float reloadDelay = 2f;           // 死亡后重载延迟
+    public float maxHealth = 100f;
+    public float currentHealth;
+    public TextMesh healthText;
+    public float reloadDelay = 2f;
 
     void Start()
     {
@@ -16,7 +15,6 @@ public class Xue : MonoBehaviour
         UpdateHealthDisplay();
     }
 
-    // 受到伤害
     public void TakeDamage(float damage)
     {
         currentHealth -= damage;
@@ -30,7 +28,6 @@ public class Xue : MonoBehaviour
         UpdateHealthDisplay();
     }
 
-    // 更新血量显示
     void UpdateHealthDisplay()
     {
         if (healthText != null)
@@ -39,10 +36,8 @@ public class Xue : MonoBehaviour
         }
     }
 
-    // 死亡处理
     void Die()
     {
-        // 延迟后重新加载当前场景
         StartCoroutine(ReloadScene());
     }
 
@@ -50,5 +45,33 @@ public class Xue : MonoBehaviour
     {
         yield return new WaitForSeconds(reloadDelay);
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("XueBu"))
+        {
+            currentHealth += 25;
+            if (currentHealth > maxHealth)
+            {
+                currentHealth = maxHealth;
+            }
+            UpdateHealthDisplay();
+            Destroy(other.gameObject);
+        }
+        else if (other.CompareTag("HPLevel2"))
+        {
+            maxHealth = 150f;
+            currentHealth = 150f;
+            UpdateHealthDisplay();
+            Destroy(other.gameObject);
+        }
+        else if (other.CompareTag("HPLevel3"))
+        {
+            maxHealth = 200f;
+            currentHealth = 200f;
+            UpdateHealthDisplay();
+            Destroy(other.gameObject);
+        }
     }
 }
