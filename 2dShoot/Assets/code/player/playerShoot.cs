@@ -4,29 +4,28 @@ using UnityEngine.UI;
 
 public class AdvancedShooter : MonoBehaviour
 {
-    [Header("×Óµ¯ÉèÖÃ")]
+    [Header("ï¿½Óµï¿½ï¿½ï¿½ï¿½ï¿½")]
     public GameObject bulletPrefab;
     public Transform firePoint;
     public float bulletSpeed = 15f;
 
-    [Header("µ¯Ò©ÏµÍ³")]
-    public int magazineSize = 15;      // µ¯Ï»ÈÝÁ¿
-    public int bulletsInMagazine = 15; // µ±Ç°µ¯Ï»×Óµ¯Êý
-    public int maxBullets = 90;        // ×î´ó×Óµ¯Ð¯´øÁ¿
-    public int totalBullets = 30;      // ×Ü×Óµ¯Êý£¨µ¯Ï»+±¸ÓÃ£©
-    public float reloadTime = 1.5f;    // »»µ¯Ê±¼ä
+    [Header("ï¿½ï¿½Ò©ÏµÍ³")]
+    public int magazineSize = 15;      
+    public int bulletsInMagazine = 15;
+    public int maxBullets = 90;        
+    public int totalBullets = 30;      
+    public float reloadTime = 1.5f;    
 
-    [Header("UI×é¼þ")]
-    public TextMesh ammoText;              // µ¯Ò©ÏÔÊ¾ÎÄ±¾£¨ÏÔÊ¾µ¯Ï»ÄÚ×Óµ¯/×Ü×Óµ¯£©
-    public TextMesh totalAmmoText;         // ×Üµ¯Ò©ÏÔÊ¾ÎÄ±¾£¨ÏÔÊ¾×Ü×Óµ¯/×î´ó×Óµ¯£©
-    public Slider reloadSlider;        // »»µ¯½ø¶ÈÌõ£¨¿ÉÑ¡£©
-    public GameObject reloadUI;        // »»µ¯ÌáÊ¾UI£¨¿ÉÑ¡£©
-
-    [Header("ÒôÐ§")]
+    [Header("UIï¿½ï¿½ï¿½")]
+    public TextMesh ammoText;              
+    public TextMesh totalAmmoText;        
+    public Slider reloadSlider;        
+    public GameObject reloadUI;        
+    [Header("ï¿½ï¿½Ð§")]
     public AudioClip shootSound;
     public AudioClip reloadSound;
     public AudioClip emptySound;
-    public AudioClip pickUpSound;      // ¼ñÆð×Óµ¯ÒôÐ§
+    public AudioClip pickUpSound;      
 
     private Mouse mouse;
     private Keyboard keyboard;
@@ -43,40 +42,33 @@ public class AdvancedShooter : MonoBehaviour
         if (audioSource == null)
             audioSource = gameObject.AddComponent<AudioSource>();
 
-        // ³õÊ¼»¯×Óµ¯×ÜÊý
         UpdateTotalBullets();
 
-        // ³õÊ¼»¯UI
         UpdateAmmoDisplay();
 
-        // Òþ²Ø»»µ¯UI£¨Èç¹ûÓÐ£©
         if (reloadUI != null) reloadUI.SetActive(false);
         if (reloadSlider != null) reloadSlider.gameObject.SetActive(false);
     }
 
     void Update()
     {
-        // ´¦Àí»»µ¯½ø¶È
         if (isReloading)
         {
             reloadTimer += Time.deltaTime;
 
-            // ¸üÐÂ»»µ¯½ø¶ÈÌõ
             if (reloadSlider != null)
             {
                 reloadSlider.value = reloadTimer / reloadTime;
             }
 
-            // ¼ì²é»»µ¯ÊÇ·ñÍê³É
             if (reloadTimer >= reloadTime)
             {
                 FinishReload();
             }
 
-            return; // »»µ¯Ê±²»ÄÜÉä»÷
+            return; 
         }
 
-        // Éä»÷ÊäÈë
         if (mouse != null && mouse.leftButton.wasPressedThisFrame)
         {
             if (bulletsInMagazine > 0)
@@ -85,26 +77,18 @@ public class AdvancedShooter : MonoBehaviour
             }
             else
             {
-                // µ¯Ï»¿ÕÁË£¬²¥·Å¿ÕÇ¹Éù
                 PlaySound(emptySound);
-                Debug.Log("µ¯Ï»¿ÕÁË£¡°´R»»µ¯");
-
-                // ¼ì²éÊÇ·ñÓÐ±¸ÓÃµ¯Ò©
+                
                 if (totalBullets > 0)
                 {
                     StartReload();
                 }
-                else
-                {
-                    Debug.Log("Ã»ÓÐ±¸ÓÃµ¯Ò©ÁË£¡");
-                }
+                
             }
         }
 
-        // »»µ¯ÊäÈë
         if (keyboard != null && keyboard.rKey.wasPressedThisFrame)
         {
-            // Èç¹ûµ¯Ï»²»Âú¡¢ÓÐ±¸ÓÃµ¯Ò©ÇÒ²»ÔÚ»»µ¯ÖÐ£¬¿ªÊ¼»»µ¯
             if (bulletsInMagazine < magazineSize && totalBullets > 0 && !isReloading)
             {
                 StartReload();
@@ -112,13 +96,12 @@ public class AdvancedShooter : MonoBehaviour
         }
     }
 
-    // ´¥·¢Æ÷¼ì²â¼ñÆð×Óµ¯
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("ZiDanBu"))
         {
             PickUpAmmo();
-            Destroy(other.gameObject); // Ïú»Ù×Óµ¯ÎïÆ·
+            Destroy(other.gameObject); 
         }
     }
 
@@ -127,30 +110,27 @@ public class AdvancedShooter : MonoBehaviour
         if (other.CompareTag("ZiDanBu"))
         {
             PickUpAmmo();
-            Destroy(other.gameObject); // Ïú»Ù×Óµ¯ÎïÆ·
+            Destroy(other.gameObject); 
         }
     }
 
     void PickUpAmmo()
     {
-        // Ôö¼ÓÒ»Ëó×Ó×Óµ¯£¨Ò»¸öµ¯Ï»µÄÈÝÁ¿£©
         int oldTotal = totalBullets;
-        int bulletsToAdd = magazineSize; // Ò»Ëó×Ó¾ÍÊÇµ¯Ï»ÈÝÁ¿
+        int bulletsToAdd = magazineSize; 
 
         totalBullets = Mathf.Clamp(totalBullets + bulletsToAdd, 0, maxBullets);
 
         UpdateTotalBullets();
-        UpdateAmmoDisplay(); // ÕâÀïÒ²ÒªË¢ÐÂµÚÒ»¸öUIÎÄ±¾
+        UpdateAmmoDisplay(); 
 
         int added = totalBullets - oldTotal;
         if (added > 0)
         {
-            // ²¥·Å¼ñÆðÒôÐ§
             PlaySound(pickUpSound);
 
-            Debug.Log($"¼ñµ½Ò»Ëó×Óµ¯£¡Ôö¼Ó{added}·¢£¬µ±Ç°±¸ÓÃ: {totalBullets}/{maxBullets}");
+            
 
-            // Èç¹ûµ¯Ï»ÊÇ¿ÕµÄ£¬×Ô¶¯¿ªÊ¼»»µ¯
             if (bulletsInMagazine == 0 && !isReloading)
             {
                 StartReload();
@@ -162,28 +142,21 @@ public class AdvancedShooter : MonoBehaviour
     {
         if (bulletPrefab == null || firePoint == null) return;
 
-        // ÏûºÄ×Óµ¯
         bulletsInMagazine--;
         UpdateAmmoDisplay();
 
-        // ²¥·ÅÉä»÷ÒôÐ§
         PlaySound(shootSound);
 
-        // ´´½¨×Óµ¯
         Vector3 spawnPos = firePoint.position;
         GameObject bullet = Instantiate(bulletPrefab, spawnPos, Quaternion.identity);
 
-        // È·¶¨·¢Éä·½Ïò
         Vector3 shootDirection = GetShootDirection();
 
-        // ÉèÖÃ×Óµ¯ÒÆ¶¯
         bullet.AddComponent<BulletController>().Setup(shootDirection, bulletSpeed);
         bullet.transform.forward = shootDirection;
 
-        // ×Ô¶¯Ïú»Ù
+        
         Destroy(bullet, 3f);
-
-        Debug.Log($"Éä»÷£¡Ê£Óàµ¯Ò©: {bulletsInMagazine}/{magazineSize}");
     }
 
     Vector3 GetShootDirection()
@@ -202,14 +175,13 @@ public class AdvancedShooter : MonoBehaviour
     {
         if (isReloading || bulletsInMagazine >= magazineSize || totalBullets <= 0) return;
 
-        Debug.Log("¿ªÊ¼»»µ¯...");
         isReloading = true;
         reloadTimer = 0f;
 
-        // ²¥·Å»»µ¯ÒôÐ§
+        
         PlaySound(reloadSound);
 
-        // ÏÔÊ¾»»µ¯UI
+        
         if (reloadUI != null) reloadUI.SetActive(true);
         if (reloadSlider != null)
         {
@@ -218,31 +190,30 @@ public class AdvancedShooter : MonoBehaviour
             reloadSlider.value = 0f;
         }
 
-        // ¸üÐÂµ¯Ò©ÏÔÊ¾Îª»»µ¯ÖÐ
+        
         if (ammoText != null)
             ammoText.text = "Reloading...";
     }
 
     void FinishReload()
     {
-        // ¼ÆËã¿ÉÒÔ×°ÌîµÄ×Óµ¯ÊýÁ¿
+        
         int bulletsToReload = Mathf.Min(magazineSize - bulletsInMagazine, totalBullets);
 
-        // ×°Ìî×Óµ¯
+        
         bulletsInMagazine += bulletsToReload;
         totalBullets -= bulletsToReload;
 
         isReloading = false;
 
-        // Òþ²Ø»»µ¯UI
+        
         if (reloadUI != null) reloadUI.SetActive(false);
         if (reloadSlider != null) reloadSlider.gameObject.SetActive(false);
 
-        // ¸üÐÂµ¯Ò©ÏÔÊ¾
+        
         UpdateAmmoDisplay();
         UpdateTotalBullets();
 
-        Debug.Log($"»»µ¯Íê³É£¡µ¯Ò©: {bulletsInMagazine}/{magazineSize}, ±¸ÓÃ: {totalBullets}");
     }
 
     void UpdateAmmoDisplay()
@@ -269,30 +240,25 @@ public class AdvancedShooter : MonoBehaviour
         }
     }
 
-    // ¹«¿ª·½·¨¹©ÆäËû½Å±¾µ÷ÓÃ
     public int GetCurrentAmmo() => bulletsInMagazine;
     public int GetMaxAmmo() => magazineSize;
     public int GetTotalAmmo() => totalBullets;
     public int GetMaxTotalAmmo() => maxBullets;
     public bool IsReloading() => isReloading;
 
-    // Ìí¼Óµ¯Ò©£¨±ÈÈç¼ñµ½µ¯Ò©°ü£©
+    
     public void AddAmmo(int amount)
     {
         int oldTotal = totalBullets;
         totalBullets = Mathf.Clamp(totalBullets + amount, 0, maxBullets);
 
         UpdateTotalBullets();
-        UpdateAmmoDisplay(); // ÕâÀïÒ²ÒªË¢ÐÂµÚÒ»¸öUIÎÄ±¾
-
+        UpdateAmmoDisplay(); 
         int added = totalBullets - oldTotal;
-        if (added > 0)
-        {
-            Debug.Log($"»ñµÃ{added}·¢µ¯Ò©£¬µ±Ç°: {totalBullets}/{maxBullets}");
-        }
+        
     }
 
-    // Ìí¼Ó×Üµ¯Ò©ÏÔÊ¾UIµÄ·½·¨£¨¿ÉÒÔÔÚ±à¼­Æ÷ÖÐµ÷ÓÃ£©
+    
     public void SetTotalAmmoUI(TextMesh uiText)
     {
         totalAmmoText = uiText;
