@@ -16,6 +16,9 @@ public class GuaiXue : MonoBehaviour
     // 新增：血量显示TextMesh
     public TextMesh healthText;
 
+    // 新增：销毁时生成的预制体
+    public GameObject spawnOnDestroy;
+
     // 内部状态变量
     private float originalTimeScale;     // 原始游戏速度（用于恢复）
     private bool isSlowing = false;      // 是否正在慢动作状态
@@ -99,6 +102,10 @@ public class GuaiXue : MonoBehaviour
         if (health <= 0)
         {
             RestoreEffects(); // 恢复效果后再销毁
+
+            // 在销毁前生成预制体
+            SpawnPrefabOnDestroy();
+
             Destroy(gameObject);  // 销毁自身游戏对象
         }
     }
@@ -139,6 +146,15 @@ public class GuaiXue : MonoBehaviour
                     childRenderers[i].color = originalColors[i];
                 }
             }
+        }
+    }
+
+    // 新增：在当前位置生成预制体的方法
+    void SpawnPrefabOnDestroy()
+    {
+        if (spawnOnDestroy != null)
+        {
+            Instantiate(spawnOnDestroy, transform.position, transform.rotation);
         }
     }
 

@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 624671535578067221}
   - component: {fileID: 36357651468652918}
   - component: {fileID: 3921036928732997774}
-  - component: {fileID: 6990148473278853623}
+  - component: {fileID: -1015917291081751818}
   m_Layer: 0
   m_Name: Box
   m_TagString: Untagged
@@ -140,7 +140,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &6990148473278853623
+--- !u!114 &-1015917291081751818
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -149,12 +149,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 539613675493880793}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5edd2f8bb27942445b0096753124ac23, type: 3}
+  m_Script: {fileID: 11500000, guid: dd0eb185873b6b044a0086965184f8d7, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GuaiXue
-  health: 3
-  bulletDamage: 1
-  slowTimeScale: 0
-  slowDuration: 0
-  whiteColor: {r: 1, g: 1, b: 1, a: 1}
+  m_EditorClassIdentifier: Assembly-CSharp::BoxXue
+  health: 100
+  bulletDamage: 20
   healthText: {fileID: 0}
+  spawnOnDestroyA: {fileID: 7114412505401439820, guid: 9b8b2360c0fd0c640a4c0b855ac1c81f, type: 3}
+  spawnOnDestroyB: {fileID: 7114412505401439820, guid: 9f056481a8f660a428736a1697640503, type: 3}
+  spawnChance: 0.5

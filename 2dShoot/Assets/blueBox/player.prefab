@@ -245,6 +245,7 @@ GameObject:
   - component: {fileID: 7682424439620314076}
   - component: {fileID: 369580423755843050}
   - component: {fileID: 6140958082925632186}
+  - component: {fileID: 5665543487583076858}
   m_Layer: 0
   m_Name: player
   m_TagString: Player
@@ -550,6 +551,20 @@ MonoBehaviour:
   frozenLevel2Object: {fileID: 6537106210682951368}
   frozenLevel3Object: {fileID: 8931304856368306517}
   showDebugLogs: 0
+--- !u!114 &5665543487583076858
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1956555998246702588}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5f45311f2b51f845b26c4b319c25d94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HunDisplay
+  Hun: 0
+  text: {fileID: 0}
 --- !u!1 &2260024806822759176
 GameObject:
   m_ObjectHideFlags: 0

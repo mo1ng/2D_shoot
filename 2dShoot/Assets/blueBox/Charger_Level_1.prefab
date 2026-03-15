@@ -379,6 +379,7 @@ MonoBehaviour:
   slowDuration: 0.1
   whiteColor: {r: 1, g: 0, b: 0, a: 1}
   healthText: {fileID: 6850251314586295897}
+  spawnOnDestroy: {fileID: 7114412505401439820, guid: 3cfda80570035d04ebab142db41df49b, type: 3}
 --- !u!54 &3995925371478129832
 Rigidbody:
   m_ObjectHideFlags: 0
