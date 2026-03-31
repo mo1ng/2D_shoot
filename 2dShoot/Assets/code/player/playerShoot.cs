@@ -4,28 +4,29 @@ using UnityEngine.UI;
 
 public class AdvancedShooter : MonoBehaviour
 {
-    [Header("�ӵ�����")]
+    [Header("子弹设置")]
     public GameObject bulletPrefab;
     public Transform firePoint;
     public float bulletSpeed = 15f;
 
-    [Header("��ҩϵͳ")]
-    public int magazineSize = 15;      
+    [Header("弹药系统")]
+    public int magazineSize = 15;
     public int bulletsInMagazine = 15;
-    public int maxBullets = 90;        
-    public int totalBullets = 30;      
-    public float reloadTime = 1.5f;    
+    public int maxBullets = 90;
+    public int totalBullets = 30;
+    public float reloadTime = 1.5f;
 
-    [Header("UI���")]
-    public TextMesh ammoText;              
-    public TextMesh totalAmmoText;        
-    public Slider reloadSlider;        
-    public GameObject reloadUI;        
-    [Header("��Ч")]
+    [Header("UI显示")]
+    public TextMesh ammoText;
+    public TextMesh totalAmmoText;
+    public Slider reloadSlider;
+    public GameObject reloadUI;
+
+    [Header("音效")]
     public AudioClip shootSound;
     public AudioClip reloadSound;
     public AudioClip emptySound;
-    public AudioClip pickUpSound;      
+    public AudioClip pickUpSound;
 
     private Mouse mouse;
     private Keyboard keyboard;
@@ -43,7 +44,6 @@ public class AdvancedShooter : MonoBehaviour
             audioSource = gameObject.AddComponent<AudioSource>();
 
         UpdateTotalBullets();
-
         UpdateAmmoDisplay();
 
         if (reloadUI != null) reloadUI.SetActive(false);
@@ -66,7 +66,7 @@ public class AdvancedShooter : MonoBehaviour
                 FinishReload();
             }
 
-            return; 
+            return;
         }
 
         if (mouse != null && mouse.leftButton.wasPressedThisFrame)
@@ -78,12 +78,12 @@ public class AdvancedShooter : MonoBehaviour
             else
             {
                 PlaySound(emptySound);
-                
+
                 if (totalBullets > 0)
                 {
                     StartReload();
                 }
-                
+
             }
         }
 
@@ -101,7 +101,7 @@ public class AdvancedShooter : MonoBehaviour
         if (other.CompareTag("ZiDanBu"))
         {
             PickUpAmmo();
-            Destroy(other.gameObject); 
+            Destroy(other.gameObject);
         }
     }
 
@@ -110,26 +110,24 @@ public class AdvancedShooter : MonoBehaviour
         if (other.CompareTag("ZiDanBu"))
         {
             PickUpAmmo();
-            Destroy(other.gameObject); 
+            Destroy(other.gameObject);
         }
     }
 
     void PickUpAmmo()
     {
         int oldTotal = totalBullets;
-        int bulletsToAdd = magazineSize; 
+        int bulletsToAdd = magazineSize;
 
         totalBullets = Mathf.Clamp(totalBullets + bulletsToAdd, 0, maxBullets);
 
         UpdateTotalBullets();
-        UpdateAmmoDisplay(); 
+        UpdateAmmoDisplay();
 
         int added = totalBullets - oldTotal;
         if (added > 0)
         {
             PlaySound(pickUpSound);
-
-            
 
             if (bulletsInMagazine == 0 && !isReloading)
             {
@@ -147,28 +145,21 @@ public class AdvancedShooter : MonoBehaviour
 
         PlaySound(shootSound);
 
+        // 使用 firePoint 的位置和正Z轴方向
         Vector3 spawnPos = firePoint.position;
+        Vector3 shootDirection = firePoint.forward; // 获取 firePoint 的正Z轴方向
+
         GameObject bullet = Instantiate(bulletPrefab, spawnPos, Quaternion.identity);
 
-        Vector3 shootDirection = GetShootDirection();
+        // 设置子弹的方向和速度
+        BulletController bulletController = bullet.AddComponent<BulletController>();
+        bulletController.Setup(shootDirection, bulletSpeed);
 
-        bullet.AddComponent<BulletController>().Setup(shootDirection, bulletSpeed);
+        // 可选：让子弹的旋转也指向射击方向
         bullet.transform.forward = shootDirection;
 
-        
+        // 3秒后销毁子弹
         Destroy(bullet, 3f);
-    }
-
-    Vector3 GetShootDirection()
-    {
-        float yRotation = transform.eulerAngles.y;
-
-        if (Mathf.Approximately(yRotation, 0f) || Mathf.Approximately(yRotation, 360f))
-            return Vector3.right;
-        else if (Mathf.Approximately(Mathf.Abs(yRotation), 180f))
-            return Vector3.left;
-        else
-            return Vector3.right;
     }
 
     void StartReload()
@@ -178,10 +169,8 @@ public class AdvancedShooter : MonoBehaviour
         isReloading = true;
         reloadTimer = 0f;
 
-        
         PlaySound(reloadSound);
 
-        
         if (reloadUI != null) reloadUI.SetActive(true);
         if (reloadSlider != null)
         {
@@ -190,30 +179,24 @@ public class AdvancedShooter : MonoBehaviour
             reloadSlider.value = 0f;
         }
 
-        
         if (ammoText != null)
             ammoText.text = "Reloading...";
     }
 
     void FinishReload()
     {
-        
         int bulletsToReload = Mathf.Min(magazineSize - bulletsInMagazine, totalBullets);
 
-        
         bulletsInMagazine += bulletsToReload;
         totalBullets -= bulletsToReload;
 
         isReloading = false;
 
-        
         if (reloadUI != null) reloadUI.SetActive(false);
         if (reloadSlider != null) reloadSlider.gameObject.SetActive(false);
 
-        
         UpdateAmmoDisplay();
         UpdateTotalBullets();
-
     }
 
     void UpdateAmmoDisplay()
@@ -246,19 +229,16 @@ public class AdvancedShooter : MonoBehaviour
     public int GetMaxTotalAmmo() => maxBullets;
     public bool IsReloading() => isReloading;
 
-    
     public void AddAmmo(int amount)
     {
         int oldTotal = totalBullets;
         totalBullets = Mathf.Clamp(totalBullets + amount, 0, maxBullets);
 
         UpdateTotalBullets();
-        UpdateAmmoDisplay(); 
+        UpdateAmmoDisplay();
         int added = totalBullets - oldTotal;
-        
     }
 
-    
     public void SetTotalAmmoUI(TextMesh uiText)
     {
         totalAmmoText = uiText;

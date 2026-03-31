@@ -2614,6 +2614,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: player
       objectReference: {fileID: 0}
+    - target: {fileID: 3961527161685038666, guid: f563dff3b37717b4faf4b5a15323cdd7, type: 3}
+      propertyPath: mainCamera
+      value: 
+      objectReference: {fileID: 330585545}
     - target: {fileID: 3971682554248494116, guid: f563dff3b37717b4faf4b5a15323cdd7, type: 3}
       propertyPath: healthText
       value: 
