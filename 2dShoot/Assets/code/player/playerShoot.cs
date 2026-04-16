@@ -22,26 +22,26 @@ public class AdvancedShooter : MonoBehaviour
     public Slider reloadSlider;
     public GameObject reloadUI;
 
-    [Header("音效")]
-    public AudioClip shootSound;
-    public AudioClip reloadSound;
-    public AudioClip emptySound;
-    public AudioClip pickUpSound;
+    [Header("射击扣血")]
+    public float shootDamageCost = 5f;  // 每次射击扣除的血量
 
     private Mouse mouse;
     private Keyboard keyboard;
     private bool isReloading = false;
     private float reloadTimer = 0f;
-    private AudioSource audioSource;
+    private Xue healthSystem;  // 引用血量系统
 
     void Start()
     {
         mouse = Mouse.current;
         keyboard = Keyboard.current;
-        audioSource = GetComponent<AudioSource>();
 
-        if (audioSource == null)
-            audioSource = gameObject.AddComponent<AudioSource>();
+        // 获取血量系统组件
+        healthSystem = GetComponent<Xue>();
+        if (healthSystem == null)
+        {
+            Debug.LogWarning("未找到 Xue 血量系统组件，射击扣血功能将无效");
+        }
 
         UpdateTotalBullets();
         UpdateAmmoDisplay();
@@ -77,13 +77,10 @@ public class AdvancedShooter : MonoBehaviour
             }
             else
             {
-                PlaySound(emptySound);
-
                 if (totalBullets > 0)
                 {
                     StartReload();
                 }
-
             }
         }
 
@@ -127,8 +124,6 @@ public class AdvancedShooter : MonoBehaviour
         int added = totalBullets - oldTotal;
         if (added > 0)
         {
-            PlaySound(pickUpSound);
-
             if (bulletsInMagazine == 0 && !isReloading)
             {
                 StartReload();
@@ -140,14 +135,18 @@ public class AdvancedShooter : MonoBehaviour
     {
         if (bulletPrefab == null || firePoint == null) return;
 
+        // 扣除血量
+        if (healthSystem != null)
+        {
+            healthSystem.TakeDamage(shootDamageCost);
+        }
+
         bulletsInMagazine--;
         UpdateAmmoDisplay();
 
-        PlaySound(shootSound);
-
         // 使用 firePoint 的位置和正Z轴方向
         Vector3 spawnPos = firePoint.position;
-        Vector3 shootDirection = firePoint.forward; // 获取 firePoint 的正Z轴方向
+        Vector3 shootDirection = firePoint.forward;
 
         GameObject bullet = Instantiate(bulletPrefab, spawnPos, Quaternion.identity);
 
@@ -168,8 +167,6 @@ public class AdvancedShooter : MonoBehaviour
 
         isReloading = true;
         reloadTimer = 0f;
-
-        PlaySound(reloadSound);
 
         if (reloadUI != null) reloadUI.SetActive(true);
         if (reloadSlider != null)
@@ -212,14 +209,6 @@ public class AdvancedShooter : MonoBehaviour
         if (totalAmmoText != null)
         {
             totalAmmoText.text = $"{totalBullets}/{maxBullets}";
-        }
-    }
-
-    void PlaySound(AudioClip clip)
-    {
-        if (clip != null && audioSource != null)
-        {
-            audioSource.PlayOneShot(clip);
         }
     }
 

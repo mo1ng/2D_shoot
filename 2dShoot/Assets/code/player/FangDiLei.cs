@@ -24,6 +24,9 @@ public class FangDiLei : MonoBehaviour
     public string countFormat = "{0}/{1}";      // 数量显示格式
     public string rechargeFormat = "{0:P0}";    // 进度显示格式
 
+    [Header("放置扣血")]
+    public float bombPlaceDamageCost = 10f;  // 每次放置炸弹扣除的血量
+
     // 如果3D文本是模型的一部分，可能需要设置相对位置
     public Vector3 uiOffset = Vector3.zero;      // UI相对位置的偏移量
     public Transform uiParent;                    // UI的父对象（通常是模型本身）
@@ -39,11 +42,19 @@ public class FangDiLei : MonoBehaviour
     private int currentBombs;
     private float rechargeTimer;
     private List<GameObject> placedBombs = new List<GameObject>();
+    private Xue healthSystem;  // 引用血量系统
 
     void Start()
     {
         currentBombs = maxBombs;
         rechargeTimer = 0f;
+
+        // 获取血量系统组件
+        healthSystem = GetComponent<Xue>();
+        if (healthSystem == null)
+        {
+            Debug.LogWarning("未找到 Xue 血量系统组件，炸弹放置扣血功能将无效");
+        }
 
         // 初始化3D UI
         Initialize3DUI();
@@ -156,6 +167,13 @@ public class FangDiLei : MonoBehaviour
         {
             Debug.LogError("请设置炸弹预制体！");
             return;
+        }
+
+        // 扣除血量
+        if (healthSystem != null)
+        {
+            healthSystem.TakeDamage(bombPlaceDamageCost);
+            Debug.Log($"放置炸弹消耗 {bombPlaceDamageCost} 血量");
         }
 
         Vector3 position = spawnPoint != null ? spawnPoint.position : transform.position;
@@ -289,6 +307,18 @@ public class FangDiLei : MonoBehaviour
             bombCount3DText.transform.localPosition = position;
         if (recharge3DText != null)
             recharge3DText.transform.localPosition = position + new Vector3(0, -0.5f, 0);
+    }
+
+    // 设置扣血量（公开方法，方便外部调整）
+    public void SetBombPlaceDamageCost(float newCost)
+    {
+        bombPlaceDamageCost = Mathf.Max(0f, newCost);
+    }
+
+    // 获取当前扣血量
+    public float GetBombPlaceDamageCost()
+    {
+        return bombPlaceDamageCost;
     }
 
     void LateUpdate()
