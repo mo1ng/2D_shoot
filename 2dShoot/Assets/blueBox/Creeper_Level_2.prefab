@@ -334,7 +334,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5edd2f8bb27942445b0096753124ac23, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GuaiXue
-  health: 60
+  health: 50
   bulletDamage: 25
   slowTimeScale: 0
   slowDuration: 0.1

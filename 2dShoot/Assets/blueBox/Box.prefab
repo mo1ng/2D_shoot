@@ -152,9 +152,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd0eb185873b6b044a0086965184f8d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BoxXue
-  health: 100
+  health: 1
   bulletDamage: 20
   healthText: {fileID: 0}
+  dropChance: 0.5
   spawnOnDestroyA: {fileID: 7114412505401439820, guid: 9b8b2360c0fd0c640a4c0b855ac1c81f, type: 3}
   spawnOnDestroyB: {fileID: 7114412505401439820, guid: 9f056481a8f660a428736a1697640503, type: 3}
-  spawnChance: 0.5

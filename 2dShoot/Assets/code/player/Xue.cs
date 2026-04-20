@@ -100,8 +100,8 @@ public class Xue : MonoBehaviour
         }
         else if (other.CompareTag("HPLevel2"))
         {
-            maxHealth = 150f;
-            currentHealth = 150f;
+            maxHealth = 180f;
+            currentHealth = 180f;
             UpdateHealthDisplay();
             Destroy(other.gameObject);
         }

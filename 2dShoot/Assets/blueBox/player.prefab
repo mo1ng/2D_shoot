@@ -246,6 +246,7 @@ GameObject:
   - component: {fileID: 369580423755843050}
   - component: {fileID: 6140958082925632186}
   - component: {fileID: 5665543487583076858}
+  - component: {fileID: 4363533150666200567}
   m_Layer: 0
   m_Name: player
   m_TagString: Player
@@ -445,10 +446,7 @@ MonoBehaviour:
   totalAmmoText: {fileID: 0}
   reloadSlider: {fileID: 0}
   reloadUI: {fileID: 0}
-  shootSound: {fileID: 0}
-  reloadSound: {fileID: 0}
-  emptySound: {fileID: 0}
-  pickUpSound: {fileID: 0}
+  shootDamageCost: 5
 --- !u!114 &3971682554248494116
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -465,6 +463,9 @@ MonoBehaviour:
   currentHealth: 0
   healthText: {fileID: 0}
   reloadDelay: 2
+  isInLight: 0
+  damagePerSecond: 3
+  healPerSecond: 1
 --- !u!114 &6810745877911082541
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -486,6 +487,7 @@ MonoBehaviour:
   recharge3DText: {fileID: 0}
   countFormat: '{0}/{1}'
   rechargeFormat: '{0:P0}'
+  bombPlaceDamageCost: 10
   uiOffset: {x: 0, y: 0, z: 0}
   uiParent: {fileID: 0}
 --- !u!114 &7682424439620314076
@@ -509,6 +511,7 @@ MonoBehaviour:
   recharge3DText: {fileID: 0}
   countFormat: '{0}/{1}'
   rechargeFormat: '{0:P0}'
+  bombPlaceDamageCost: 10
   uiOffset: {x: 0, y: 0, z: 0}
   uiParent: {fileID: 0}
 --- !u!114 &369580423755843050
@@ -532,6 +535,7 @@ MonoBehaviour:
   recharge3DText: {fileID: 0}
   countFormat: '{0}/{1}'
   rechargeFormat: '{0:P0}'
+  bombPlaceDamageCost: 10
   uiOffset: {x: 0, y: 0, z: 0}
   uiParent: {fileID: 0}
 --- !u!114 &6140958082925632186
@@ -565,6 +569,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::HunDisplay
   Hun: 0
   text: {fileID: 0}
+--- !u!65 &4363533150666200567
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1956555998246702588}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 2, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &2260024806822759176
 GameObject:
   m_ObjectHideFlags: 0

@@ -352,7 +352,7 @@ MonoBehaviour:
   playerTag: Player
   moveSpeed: 2
   acceleration: 2
-  maxSpeed: 10
+  maxSpeed: 5
   chaseRadius: 10
   stopDistance: 0
   maxChaseHeight: 2
