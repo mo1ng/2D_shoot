@@ -15,8 +15,14 @@ public class GuaiiKaoJin : MonoBehaviour
     public Color startColor = Color.white;
     public Color warningColor = Color.red;
 
-    // 新增：爆炸倒计时TextMesh
+    // 爆炸倒计时TextMesh
     public TextMesh timerText;
+
+    // 新增：旋转设置（Z轴对准玩家）
+    [Header("旋转设置（Z轴对准玩家）")]
+    public float maxRotationAngle = 60f;  // 最大旋转角度（超过此角度不再继续偏移）
+    public float rotationSpeed = 180f;    // 旋转速度（度/秒）
+    public bool smoothRotation = true;    // 是否平滑旋转
 
     private Transform target;
     private bool hasExploded = false;
@@ -52,26 +58,18 @@ public class GuaiiKaoJin : MonoBehaviour
 
         float distance = Vector3.Distance(transform.position, target.position);
 
-        // 当可以移动时，根据玩家位置设置朝向
+        // 当可以移动时，更新旋转并移动
         if (distance > stopDistance && canMove)
         {
-            // 设置怪物朝向：玩家在左侧时y=0，在右侧时y=-180
-            if (target.position.x > transform.position.x)
-            {
-                // 玩家在右侧，朝向右边（y = 0）
-                transform.rotation = Quaternion.Euler(0, 0, 0);
-            }
-            else
-            {
-                // 玩家在左侧，朝向左边（y = -180）
-                transform.rotation = Quaternion.Euler(0, -180, 0);
-            }
+            // 更新旋转（Z轴对准玩家）
+            UpdateRotation();
 
             // 向玩家移动
             transform.position += (target.position - transform.position).normalized * moveSpeed * Time.deltaTime;
         }
         else if (!hasExploded)
         {
+            // 到达停止距离，开始准备爆炸
             prepareTimer += Time.deltaTime;
             UpdateVisualEffect();
             UpdateTimerText();
@@ -79,6 +77,55 @@ public class GuaiiKaoJin : MonoBehaviour
             if (prepareTimer >= prepareTime)
             {
                 Explode();
+            }
+        }
+    }
+
+    // 更新旋转：让Z轴正方向对准玩家，但限制最大偏移角度
+    void UpdateRotation()
+    {
+        if (target == null) return;
+
+        // 计算从当前物体指向玩家的水平方向
+        Vector3 directionToPlayer = target.position - transform.position;
+        directionToPlayer.y = 0; // 只在水平面上旋转
+
+        if (directionToPlayer == Vector3.zero)
+            return;
+
+        // 获取当前Z轴正方向
+        Vector3 currentForward = transform.forward;
+
+        // 计算当前方向与目标方向的角度差
+        float angleToPlayer = Vector3.Angle(currentForward, directionToPlayer);
+
+        // 如果角度差超过最大允许角度，限制目标方向
+        if (angleToPlayer > maxRotationAngle)
+        {
+            // 计算旋转方向（左转还是右转）
+            float sign = Mathf.Sign(Vector3.Cross(currentForward, directionToPlayer).y);
+            // 限制在最大角度范围内
+            directionToPlayer = Quaternion.Euler(0, maxRotationAngle * sign, 0) * currentForward;
+        }
+
+        // 应用旋转
+        if (directionToPlayer != Vector3.zero)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(directionToPlayer);
+
+            if (smoothRotation)
+            {
+                // 平滑旋转（使用Slerp）
+                transform.rotation = Quaternion.Slerp(
+                    transform.rotation,
+                    targetRotation,
+                    rotationSpeed * Time.deltaTime / 90f // 归一化速度
+                );
+            }
+            else
+            {
+                // 直接旋转
+                transform.rotation = targetRotation;
             }
         }
     }
@@ -192,6 +239,38 @@ public class GuaiiKaoJin : MonoBehaviour
         if (other.CompareTag(targetTag) && target == null)
         {
             target = other.transform;
+        }
+    }
+
+    // 可视化调试：在Scene视图中显示旋转范围
+    void OnDrawGizmosSelected()
+    {
+        if (!Application.isPlaying) return;
+
+        // 绘制旋转范围（扇形）
+        Gizmos.color = Color.cyan;
+        Vector3 forward = transform.forward;
+
+        // 左边界
+        Vector3 leftBoundary = Quaternion.Euler(0, -maxRotationAngle, 0) * forward;
+        // 右边界
+        Vector3 rightBoundary = Quaternion.Euler(0, maxRotationAngle, 0) * forward;
+
+        Gizmos.DrawRay(transform.position, leftBoundary * 5f);
+        Gizmos.DrawRay(transform.position, rightBoundary * 5f);
+
+        // 绘制扇形弧线
+        int segments = 20;
+        float angleStep = maxRotationAngle * 2f / segments;
+        Vector3 previousPoint = transform.position + leftBoundary * 5f;
+
+        for (int i = 1; i <= segments; i++)
+        {
+            float currentAngle = -maxRotationAngle + angleStep * i;
+            Vector3 direction = Quaternion.Euler(0, currentAngle, 0) * forward;
+            Vector3 currentPoint = transform.position + direction * 5f;
+            Gizmos.DrawLine(previousPoint, currentPoint);
+            previousPoint = currentPoint;
         }
     }
 }

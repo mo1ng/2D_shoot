@@ -360,6 +360,9 @@ MonoBehaviour:
   freezeDuration: 2
   destroyOnTouch: 1
   destroyDelay: 0
+  maxRotationAngle: 60
+  rotationSpeed: 180
+  smoothRotation: 1
   speedText: {fileID: 1917759730664653381}
 --- !u!114 &3899917619201607452
 MonoBehaviour:
@@ -558,6 +561,10 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: -1.94
       objectReference: {fileID: 0}
+    - target: {fileID: 1580855864014709052, guid: 3f079466f77bc9f4d916ba3d9fd4dfe9, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3094666713080522267, guid: 3f079466f77bc9f4d916ba3d9fd4dfe9, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.06
@@ -565,6 +572,10 @@ PrefabInstance:
     - target: {fileID: 3094666713080522267, guid: 3f079466f77bc9f4d916ba3d9fd4dfe9, type: 3}
       propertyPath: m_LocalPosition.y
       value: 1.28
+      objectReference: {fileID: 0}
+    - target: {fileID: 4539930983241146982, guid: 3f079466f77bc9f4d916ba3d9fd4dfe9, type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4539930983241146982, guid: 3f079466f77bc9f4d916ba3d9fd4dfe9, type: 3}
       propertyPath: m_IsActive
@@ -590,11 +601,23 @@ PrefabInstance:
       propertyPath: m_Name
       value: GUI
       objectReference: {fileID: 0}
+    - target: {fileID: 6059929973887262570, guid: 3f079466f77bc9f4d916ba3d9fd4dfe9, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6343844218824077046, guid: 3f079466f77bc9f4d916ba3d9fd4dfe9, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6983072549137001028, guid: 3f079466f77bc9f4d916ba3d9fd4dfe9, type: 3}
       propertyPath: m_Text
       value: 'Frozen : 2s
 
 '
+      objectReference: {fileID: 0}
+    - target: {fileID: 8004296030815800908, guid: 3f079466f77bc9f4d916ba3d9fd4dfe9, type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8129920162584400106, guid: 3f079466f77bc9f4d916ba3d9fd4dfe9, type: 3}
       propertyPath: m_LocalPosition.x
@@ -637,7 +660,19 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8667862420649037402, guid: 3f079466f77bc9f4d916ba3d9fd4dfe9, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8667862420649037402, guid: 3f079466f77bc9f4d916ba3d9fd4dfe9, type: 3}
       propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8785011272260689852, guid: 3f079466f77bc9f4d916ba3d9fd4dfe9, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8900851001394927070, guid: 3f079466f77bc9f4d916ba3d9fd4dfe9, type: 3}
+      propertyPath: m_Layer
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8900851001394927070, guid: 3f079466f77bc9f4d916ba3d9fd4dfe9, type: 3}

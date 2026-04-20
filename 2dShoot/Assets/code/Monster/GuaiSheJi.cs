@@ -15,6 +15,12 @@ public class GuaiSheJi : MonoBehaviour
 
     public TextMesh fireRateText;
 
+    // 新增：旋转设置（Z轴对准玩家）
+    [Header("旋转设置（Z轴对准玩家）")]
+    public float maxRotationAngle = 60f;  // 最大旋转角度（超过此角度不再继续偏移）
+    public float rotationSpeed = 180f;    // 旋转速度（度/秒）
+    public bool smoothRotation = true;    // 是否平滑旋转
+
     private Transform target;
     private bool isTargetInRange = false;
     private bool canShoot = false;
@@ -33,9 +39,12 @@ public class GuaiSheJi : MonoBehaviour
     {
         if (!isTargetInRange || target == null) return;
 
+        // 更新旋转（Z轴对准玩家）
+        UpdateRotation();
+
         MoveToTargetZ();
 
-        SetDirection();
+        SetShootDirection();
 
         CheckShootingCondition();
 
@@ -54,6 +63,55 @@ public class GuaiSheJi : MonoBehaviour
         }
 
         UpdateFireRateText();
+    }
+
+    // 更新旋转：让Z轴正方向对准玩家，但限制最大偏移角度
+    void UpdateRotation()
+    {
+        if (target == null) return;
+
+        // 计算从当前物体指向玩家的水平方向
+        Vector3 directionToPlayer = target.position - transform.position;
+        directionToPlayer.y = 0; // 只在水平面上旋转
+
+        if (directionToPlayer == Vector3.zero)
+            return;
+
+        // 获取当前Z轴正方向
+        Vector3 currentForward = transform.forward;
+
+        // 计算当前方向与目标方向的角度差
+        float angleToPlayer = Vector3.Angle(currentForward, directionToPlayer);
+
+        // 如果角度差超过最大允许角度，限制目标方向
+        if (angleToPlayer > maxRotationAngle)
+        {
+            // 计算旋转方向（左转还是右转）
+            float sign = Mathf.Sign(Vector3.Cross(currentForward, directionToPlayer).y);
+            // 限制在最大角度范围内
+            directionToPlayer = Quaternion.Euler(0, maxRotationAngle * sign, 0) * currentForward;
+        }
+
+        // 应用旋转
+        if (directionToPlayer != Vector3.zero)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(directionToPlayer);
+
+            if (smoothRotation)
+            {
+                // 平滑旋转（使用Slerp）
+                transform.rotation = Quaternion.Slerp(
+                    transform.rotation,
+                    targetRotation,
+                    rotationSpeed * Time.deltaTime / 90f // 归一化速度
+                );
+            }
+            else
+            {
+                // 直接旋转
+                transform.rotation = targetRotation;
+            }
+        }
     }
 
     void MoveToTargetZ()
@@ -76,18 +134,15 @@ public class GuaiSheJi : MonoBehaviour
         }
     }
 
-    void SetDirection()
+    void SetShootDirection()
     {
-        if (target.position.x > transform.position.x)
-        {
-            transform.eulerAngles = new Vector3(0, 0, 0);
-            shootDirection = Vector3.right;
-        }
-        else
-        {
-            transform.eulerAngles = new Vector3(0, 180, 0);
-            shootDirection = Vector3.left;
-        }
+        // 根据当前物体的朝向来设置射击方向
+        // 物体的Z轴正方向就是射击方向
+        shootDirection = transform.forward;
+
+        // 确保射击方向是水平方向（Y轴为0）
+        shootDirection.y = 0;
+        shootDirection.Normalize();
     }
 
     void CheckShootingCondition()
@@ -120,8 +175,10 @@ public class GuaiSheJi : MonoBehaviour
 
         rb.useGravity = false;
 
+        // 子弹沿物体的Z轴方向（前方）发射
         rb.linearVelocity = shootDirection * bulletSpeed;
 
+        // 让子弹的朝向与飞行方向一致
         bullet.transform.forward = shootDirection;
 
         bullet.AddComponent<DestroyOnCollision>();
@@ -135,7 +192,7 @@ public class GuaiSheJi : MonoBehaviour
     {
         GameObject point = new GameObject("FirePoint");
         point.transform.SetParent(transform);
-        point.transform.localPosition = new Vector3(0.5f, 0.5f, 0);
+        point.transform.localPosition = new Vector3(0, 0, 0.5f); // 放在物体前方
         firePoint = point.transform;
     }
 
@@ -186,6 +243,32 @@ public class GuaiSheJi : MonoBehaviour
         {
             Gizmos.color = Color.red;
             Gizmos.DrawRay(firePoint.position, shootDirection * 3f);
+        }
+
+        // 绘制旋转范围（扇形）
+        Gizmos.color = Color.cyan;
+        Vector3 forward = transform.forward;
+
+        // 左边界
+        Vector3 leftBoundary = Quaternion.Euler(0, -maxRotationAngle, 0) * forward;
+        // 右边界
+        Vector3 rightBoundary = Quaternion.Euler(0, maxRotationAngle, 0) * forward;
+
+        Gizmos.DrawRay(transform.position, leftBoundary * 5f);
+        Gizmos.DrawRay(transform.position, rightBoundary * 5f);
+
+        // 绘制扇形弧线
+        int segments = 20;
+        float angleStep = maxRotationAngle * 2f / segments;
+        Vector3 previousPoint = transform.position + leftBoundary * 5f;
+
+        for (int i = 1; i <= segments; i++)
+        {
+            float currentAngle = -maxRotationAngle + angleStep * i;
+            Vector3 direction = Quaternion.Euler(0, currentAngle, 0) * forward;
+            Vector3 currentPoint = transform.position + direction * 5f;
+            Gizmos.DrawLine(previousPoint, currentPoint);
+            previousPoint = currentPoint;
         }
     }
 }
